@@ -1,0 +1,6 @@
+wallet/
+openspec/
+escopo.md
+
+# Ignorar configurações locais
+.claude/settings.local.json

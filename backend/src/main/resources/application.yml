@@ -1,0 +1,95 @@
+spring:
+  application:
+    name: backend
+  profiles:
+    active: ${SPRING_PROFILES_ACTIVE:dev}
+  autoconfigure:
+    # We authenticate purely via our own JWT filter (see SecurityConfig / JwtAuthenticationFilter),
+    # never via Spring Security's AuthenticationManager/UserDetailsService, so disable the
+    # auto-generated default user/password that would otherwise be logged on every startup.
+    exclude:
+      - org.springframework.boot.autoconfigure.security.servlet.UserDetailsServiceAutoConfiguration
+  jpa:
+    hibernate:
+      ddl-auto: none
+    open-in-view: false
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
+
+app:
+  jwt:
+    secret: ${JWT_SECRET:dev-only-change-me-super-secret-key-min-32-bytes-long}
+    access-token-expiration-ms: ${JWT_ACCESS_EXPIRATION_MS:900000}
+  security:
+    trust-forwarded-header: ${TRUST_FORWARDED_HEADER:false}
+  rate-limit:
+    login:
+      capacity: ${RATE_LIMIT_LOGIN_CAPACITY:5}
+      refill-period-seconds: ${RATE_LIMIT_LOGIN_REFILL_SECONDS:60}
+    general:
+      capacity: ${RATE_LIMIT_GENERAL_CAPACITY:100}
+      refill-period-seconds: ${RATE_LIMIT_GENERAL_REFILL_SECONDS:60}
+  attachments:
+    storage-path: ${ATTACHMENTS_STORAGE_PATH:./data/attachments}
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+  api-docs:
+    path: /v3/api-docs
+
+---
+spring:
+  config:
+    activate:
+      on-profile: dev
+  datasource:
+    url: jdbc:oracle:thin:@${DB_CONNECTION_STRING}
+    username: ${DB_USERNAME:FINANCE_APP}
+    password: ${DB_PASSWORD:changeme}
+    driver-class-name: oracle.jdbc.OracleDriver
+
+---
+spring:
+  config:
+    activate:
+      on-profile: prod
+  datasource:
+    url: jdbc:oracle:thin:@${DB_HOST}:${DB_PORT}/${DB_SERVICE}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+    driver-class-name: oracle.jdbc.OracleDriver
+
+---
+spring:
+  config:
+    activate:
+      on-profile: test
+  datasource:
+    url: jdbc:h2:mem:testdb;MODE=Oracle;DB_CLOSE_DELAY=-1
+    username: sa
+    password:
+    driver-class-name: org.h2.Driver
+
+app:
+  jwt:
+    secret: test-only-secret-key-for-jwt-signing-in-automated-tests-32bytes
+  attachments:
+    # Isolated from the dev/prod storage path so test runs never touch real uploaded files.
+    storage-path: ${java.io.tmpdir}/burny-financas-test-attachments
+  rate-limit:
+    # High defaults so functional integration tests (which share one Spring context and therefore
+    # one set of in-memory buckets across many test classes) don't spuriously hit 429s. The rate
+    # limiting behavior itself is covered by RateLimitIntegrationTest, which overrides these down
+    # to small numbers in its own dedicated Spring context via @TestPropertySource.
+    login:
+      capacity: 10000
+      refill-period-seconds: 60
+    general:
+      capacity: 10000
+      refill-period-seconds: 60
