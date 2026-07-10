@@ -25,10 +25,13 @@ Sistema de gestão financeira pessoal multiusuário, construído com um workflow
 - React Hook Form + Zod
 - Axios (com interceptor de refresh automático)
 - Recharts, TanStack Table, React Dropzone (nas próximas etapas)
+
 **Banco de dados**
 - Oracle Autonomous Database (OCI), conexão TLS sem wallet
+  
 **Infraestrutura**
 - VPS Oracle Cloud (VM.Standard.A1.Flex, Ampere ARM, Ubuntu 22.04)
+
 **IA (planejado)**
 - Gemma via Google AI Studio — leitura de extratos e agente conversacional
 ---
