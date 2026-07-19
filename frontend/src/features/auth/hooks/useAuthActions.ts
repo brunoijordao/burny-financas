@@ -13,6 +13,7 @@ import type { LoginFormValues, RegisterFormValues } from '@/features/auth/schema
 export function useAuthActions() {
   const navigate = useNavigate()
   const setSession = useSessionStore((state) => state.setSession)
+  const setEmail = useSessionStore((state) => state.setEmail)
   const clearSession = useSessionStore((state) => state.clearSession)
   const refreshToken = useSessionStore((state) => state.refreshToken)
 
@@ -20,9 +21,10 @@ export function useAuthActions() {
     async (values: LoginFormValues) => {
       const tokens = await authApi.login(values)
       setSession(tokens)
+      setEmail(values.email)
       navigate('/', { replace: true })
     },
-    [navigate, setSession],
+    [navigate, setSession, setEmail],
   )
 
   const registerAccount = useCallback(

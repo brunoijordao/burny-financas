@@ -8,8 +8,11 @@ export interface SessionTokens {
 interface SessionState {
   accessToken: string | null
   refreshToken: string | null
+  email: string | null
   /** Populates the in-memory session after a successful login/register/refresh. */
   setSession: (tokens: SessionTokens) => void
+  /** Records the email used to log in, for display only (the backend does not return it). */
+  setEmail: (email: string) => void
   /** Clears the in-memory session (logout, refresh failure). */
   clearSession: () => void
 }
@@ -26,8 +29,10 @@ interface SessionState {
 export const useSessionStore = create<SessionState>((set) => ({
   accessToken: null,
   refreshToken: null,
+  email: null,
   setSession: ({ accessToken, refreshToken }) => set({ accessToken, refreshToken }),
-  clearSession: () => set({ accessToken: null, refreshToken: null }),
+  setEmail: (email) => set({ email }),
+  clearSession: () => set({ accessToken: null, refreshToken: null, email: null }),
 }))
 
 /** Non-hook accessor for use outside React components (e.g. Axios interceptors). */

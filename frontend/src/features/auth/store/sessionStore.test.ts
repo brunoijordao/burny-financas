@@ -32,6 +32,17 @@ describe('useSessionStore', () => {
     expect(state.refreshToken).toBeNull()
   })
 
+  it('setEmail records the email used to log in', () => {
+    useSessionStore.getState().setEmail('jane@example.com')
+    expect(useSessionStore.getState().email).toBe('jane@example.com')
+  })
+
+  it('clearSession also clears the email', () => {
+    useSessionStore.getState().setEmail('jane@example.com')
+    useSessionStore.getState().clearSession()
+    expect(useSessionStore.getState().email).toBeNull()
+  })
+
   it('never writes tokens to localStorage or sessionStorage', () => {
     useSessionStore.getState().setSession({ accessToken: 'access-1', refreshToken: 'refresh-1' })
 

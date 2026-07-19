@@ -13,7 +13,6 @@ import { TransactionFiltersBar, type TransactionFiltersValue } from '@/features/
 import { TransactionList } from '@/features/transactions/components/TransactionList'
 import * as transactionsApi from '@/features/transactions/api/transactionsApi'
 import type { PagedResult, Transaction } from '@/features/transactions/api/transactionsApi'
-import { LogoutButton } from '@/features/auth/components/LogoutButton'
 
 type Panel = 'none' | 'create' | { edit: Transaction } | { attachments: Transaction }
 
@@ -83,12 +82,9 @@ export function TransactionsPage() {
 
   return (
     <div className="mx-auto flex max-w-5xl flex-col gap-6 p-4 py-8">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-semibold">Suas transações</h1>
-          <p className="text-muted-foreground">Receitas e despesas lançadas nas suas contas.</p>
-        </div>
-        <LogoutButton />
+      <div>
+        <h1 className="text-2xl font-semibold">Suas transações</h1>
+        <p className="text-muted-foreground">Receitas e despesas lançadas nas suas contas.</p>
       </div>
 
       {loadError ? <p className="text-sm text-destructive">{loadError}</p> : null}

@@ -34,8 +34,24 @@ app:
     general:
       capacity: ${RATE_LIMIT_GENERAL_CAPACITY:100}
       refill-period-seconds: ${RATE_LIMIT_GENERAL_REFILL_SECONDS:60}
+    pdf-upload:
+      capacity: ${RATE_LIMIT_PDF_UPLOAD_CAPACITY:10}
+      refill-period-seconds: ${RATE_LIMIT_PDF_UPLOAD_REFILL_SECONDS:3600}
   attachments:
     storage-path: ${ATTACHMENTS_STORAGE_PATH:./data/attachments}
+  pdf-imports:
+    storage-path: ${PDF_IMPORTS_STORAGE_PATH:./data/pdf-imports}
+  gemma:
+    base-url: ${GEMMA_BASE_URL:https://generativelanguage.googleapis.com}
+    model: ${GEMMA_MODEL:gemma-4-31b-it}
+    api-key: ${GEMINI_API_KEY:}
+    connect-timeout-ms: ${GEMMA_CONNECT_TIMEOUT_MS:5000}
+    # gemma-4-31b-it is a "thinking" model: observed against the live API, its chain-of-thought
+    # reasoning time scales with input size — a trivial 1-transaction test took ~15-20s of thinking
+    # alone, and a real multi-page Itau statement (dozens of transactions) can take several minutes.
+    # This is inherent to the model, not a bug; the async pipeline (see design.md "Decision 1")
+    # already keeps this off the request thread, so a long wait here doesn't block the UI.
+    read-timeout-ms: ${GEMMA_READ_TIMEOUT_MS:300000}
 
 springdoc:
   swagger-ui:
@@ -82,6 +98,8 @@ app:
   attachments:
     # Isolated from the dev/prod storage path so test runs never touch real uploaded files.
     storage-path: ${java.io.tmpdir}/burny-financas-test-attachments
+  pdf-imports:
+    storage-path: ${java.io.tmpdir}/burny-financas-test-pdf-imports
   rate-limit:
     # High defaults so functional integration tests (which share one Spring context and therefore
     # one set of in-memory buckets across many test classes) don't spuriously hit 429s. The rate
@@ -91,5 +109,8 @@ app:
       capacity: 10000
       refill-period-seconds: 60
     general:
+      capacity: 10000
+      refill-period-seconds: 60
+    pdf-upload:
       capacity: 10000
       refill-period-seconds: 60

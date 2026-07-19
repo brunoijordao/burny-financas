@@ -8,7 +8,6 @@ import { AccountList } from '@/features/accounts/components/AccountList'
 import { CreateAccountForm } from '@/features/accounts/components/CreateAccountForm'
 import { EditAccountForm } from '@/features/accounts/components/EditAccountForm'
 import { TransferForm } from '@/features/accounts/components/TransferForm'
-import { LogoutButton } from '@/features/auth/components/LogoutButton'
 
 function formatCurrency(value: number) {
   return value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
@@ -51,17 +50,14 @@ export function AccountsPage() {
 
   return (
     <div className="mx-auto flex max-w-5xl flex-col gap-6 p-4 py-8">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-semibold">Suas contas</h1>
-          <p className="text-muted-foreground">
-            Saldo consolidado:{' '}
-            <span className="font-medium text-foreground">
-              {consolidatedBalance !== null ? formatCurrency(consolidatedBalance) : '...'}
-            </span>
-          </p>
-        </div>
-        <LogoutButton />
+      <div>
+        <h1 className="text-2xl font-semibold">Suas contas</h1>
+        <p className="text-muted-foreground">
+          Saldo consolidado:{' '}
+          <span className="font-medium text-foreground">
+            {consolidatedBalance !== null ? formatCurrency(consolidatedBalance) : '...'}
+          </span>
+        </p>
       </div>
 
       {loadError ? <p className="text-sm text-destructive">{loadError}</p> : null}

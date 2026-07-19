@@ -4,9 +4,16 @@ import com.burny.financas.accounts.exception.AccountNotFoundException;
 import com.burny.financas.accounts.exception.InvalidAccountDataException;
 import com.burny.financas.accounts.exception.TransferNotAllowedException;
 import com.burny.financas.auth.dto.ErrorResponse;
+import com.burny.financas.budgets.exception.BudgetNotFoundException;
+import com.burny.financas.budgets.exception.InvalidBudgetDataException;
 import com.burny.financas.categories.exception.CategoryNotFoundException;
 import com.burny.financas.categories.exception.DuplicateKeywordException;
 import com.burny.financas.categories.exception.InvalidCategoryHierarchyException;
+import com.burny.financas.goals.exception.GoalNotFoundException;
+import com.burny.financas.goals.exception.InvalidGoalDataException;
+import com.burny.financas.pdfimport.exception.InvalidPdfImportDataException;
+import com.burny.financas.pdfimport.exception.PdfImportItemNotEditableException;
+import com.burny.financas.pdfimport.exception.PdfImportNotFoundException;
 import com.burny.financas.transactions.exception.InvalidTransactionDataException;
 import com.burny.financas.transactions.exception.TransactionNotFoundException;
 import java.time.LocalDateTime;
@@ -67,6 +74,41 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(InvalidTransactionDataException.class)
     public ResponseEntity<ErrorResponse> handleInvalidTransactionData(InvalidTransactionDataException ex) {
+        return build(HttpStatus.BAD_REQUEST, ex.getMessage());
+    }
+
+    @ExceptionHandler(PdfImportNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handlePdfImportNotFound(PdfImportNotFoundException ex) {
+        return build(HttpStatus.NOT_FOUND, ex.getMessage());
+    }
+
+    @ExceptionHandler(InvalidPdfImportDataException.class)
+    public ResponseEntity<ErrorResponse> handleInvalidPdfImportData(InvalidPdfImportDataException ex) {
+        return build(HttpStatus.BAD_REQUEST, ex.getMessage());
+    }
+
+    @ExceptionHandler(PdfImportItemNotEditableException.class)
+    public ResponseEntity<ErrorResponse> handlePdfImportItemNotEditable(PdfImportItemNotEditableException ex) {
+        return build(HttpStatus.CONFLICT, ex.getMessage());
+    }
+
+    @ExceptionHandler(BudgetNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleBudgetNotFound(BudgetNotFoundException ex) {
+        return build(HttpStatus.NOT_FOUND, ex.getMessage());
+    }
+
+    @ExceptionHandler(InvalidBudgetDataException.class)
+    public ResponseEntity<ErrorResponse> handleInvalidBudgetData(InvalidBudgetDataException ex) {
+        return build(HttpStatus.BAD_REQUEST, ex.getMessage());
+    }
+
+    @ExceptionHandler(GoalNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleGoalNotFound(GoalNotFoundException ex) {
+        return build(HttpStatus.NOT_FOUND, ex.getMessage());
+    }
+
+    @ExceptionHandler(InvalidGoalDataException.class)
+    public ResponseEntity<ErrorResponse> handleInvalidGoalData(InvalidGoalDataException ex) {
         return build(HttpStatus.BAD_REQUEST, ex.getMessage());
     }
 

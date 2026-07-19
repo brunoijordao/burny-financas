@@ -8,7 +8,6 @@ import { CategoryList } from '@/features/categories/components/CategoryList'
 import { CreateCategoryForm } from '@/features/categories/components/CreateCategoryForm'
 import { EditCategoryForm } from '@/features/categories/components/EditCategoryForm'
 import { KeywordManager } from '@/features/categories/components/KeywordManager'
-import { LogoutButton } from '@/features/auth/components/LogoutButton'
 
 type Panel = 'none' | 'create' | { edit: Category } | { keywords: Category }
 
@@ -46,12 +45,9 @@ export function CategoriesPage() {
 
   return (
     <div className="mx-auto flex max-w-5xl flex-col gap-6 p-4 py-8">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-semibold">Suas categorias</h1>
-          <p className="text-muted-foreground">Organize suas transações por categoria e subcategoria.</p>
-        </div>
-        <LogoutButton />
+      <div>
+        <h1 className="text-2xl font-semibold">Suas categorias</h1>
+        <p className="text-muted-foreground">Organize suas transações por categoria e subcategoria.</p>
       </div>
 
       {loadError ? <p className="text-sm text-destructive">{loadError}</p> : null}

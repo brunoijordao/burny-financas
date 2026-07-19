@@ -57,6 +57,9 @@ npm-debug.log*
 .DS_Store
 Thumbs.db
 
+### Armazenamento local de arquivos enviados (anexos, extratos PDF) ###
+/data/
+
 ## OpenSpec
 **/openspec
 **/escopo.md
