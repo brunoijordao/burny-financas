@@ -25,7 +25,7 @@ Sistema de gestão financeira pessoal multiusuário, construído com um workflow
 - Zustand (estado global e de UI)
 - React Hook Form + Zod
 - Axios (com interceptor de refresh automático)
-- Recharts (gráficos do dashboard)
+- Recharts (gráficos do dashboard e fluxo de caixa)
 - React Dropzone (upload de arquivos)
 
 **Banco de dados**
@@ -109,6 +109,15 @@ Para o desenho visual das telas, o projeto usa uma skill de design dedicada que 
 - Progresso percentual e projeção de ritmo (ritmo atual de aportes vs. prazo da meta)
 - Histórico de metas concluídas
 
+### ✅ Planejamento financeiro
+- Contas a pagar e a receber futuras, com data de vencimento, valor, categoria e conta associada
+- Status derivado em tempo de leitura (pendente, pago/recebido, atrasado) — sem depender de job agendado para marcar um lançamento como vencido
+- Baixa (settle) de um lançamento gera uma transação real via o mesmo `TransactionBalanceService` já usado em contas e na importação de PDF, sem duplicar lógica de efeito em saldo
+- Desfazer baixa (undo) reverte o efeito no saldo e desvincula a transação, sem deixar resíduo
+- Calendário financeiro mensal com os vencimentos distribuídos por dia
+- Alertas visuais para vencimentos próximos e lançamentos atrasados
+- Fluxo de caixa projetado somando saldo atual aos lançamentos pendentes (diferente da projeção simples do dashboard, que considera só o que já foi lançado)
+
 ---
 
 ## Decisões técnicas de destaque
@@ -120,3 +129,5 @@ Para o desenho visual das telas, o projeto usa uma skill de design dedicada que 
 - **Processamento assíncrono com polling** para a chamada de IA na importação de PDF, evitando segurar threads de requisição HTTP por dezenas de segundos.
 - **Confirmação item a item obrigatória** na importação de extrato — a IA nunca lança uma transação diretamente, sempre passa por revisão humana antes de afetar o saldo real.
 - **Reaproveitamento consistente de lógica de agregação**: o cálculo de gasto por categoria usado nos orçamentos é a mesma query já usada pelo dashboard, evitando dois caminhos de cálculo divergentes para o mesmo dado.
+- **Um único serviço de efeito em saldo (`TransactionBalanceService`) reaproveitado por três fluxos diferentes**: lançamento manual de transação, confirmação de item importado via PDF/IA e baixa de contas a pagar/receber — nenhum desses caminhos duplica a regra de negócio de débito/crédito.
+- **Status derivado em vez de persistido**: "atrasado" é calculado comparando data de vencimento com a data atual no momento da consulta, evitando mais um job agendado no sistema e eliminando qualquer risco de status desatualizado.

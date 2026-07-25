@@ -1,5 +1,6 @@
 import {
   ArrowLeftRight,
+  CalendarClock,
   FileUp,
   LayoutDashboard,
   PiggyBank,
@@ -24,4 +25,5 @@ export const navItems: NavItem[] = [
   { label: 'Importação de PDF', path: '/pdf-imports', icon: FileUp },
   { label: 'Orçamentos', path: '/budgets', icon: PiggyBank },
   { label: 'Metas', path: '/goals', icon: Target },
+  { label: 'Planejamento', path: '/planning', icon: CalendarClock },
 ]

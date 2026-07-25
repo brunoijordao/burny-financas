@@ -14,6 +14,8 @@ import com.burny.financas.goals.exception.InvalidGoalDataException;
 import com.burny.financas.pdfimport.exception.InvalidPdfImportDataException;
 import com.burny.financas.pdfimport.exception.PdfImportItemNotEditableException;
 import com.burny.financas.pdfimport.exception.PdfImportNotFoundException;
+import com.burny.financas.planning.exception.InvalidPlanningEntryDataException;
+import com.burny.financas.planning.exception.PlanningEntryNotFoundException;
 import com.burny.financas.transactions.exception.InvalidTransactionDataException;
 import com.burny.financas.transactions.exception.TransactionNotFoundException;
 import java.time.LocalDateTime;
@@ -109,6 +111,16 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(InvalidGoalDataException.class)
     public ResponseEntity<ErrorResponse> handleInvalidGoalData(InvalidGoalDataException ex) {
+        return build(HttpStatus.BAD_REQUEST, ex.getMessage());
+    }
+
+    @ExceptionHandler(PlanningEntryNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handlePlanningEntryNotFound(PlanningEntryNotFoundException ex) {
+        return build(HttpStatus.NOT_FOUND, ex.getMessage());
+    }
+
+    @ExceptionHandler(InvalidPlanningEntryDataException.class)
+    public ResponseEntity<ErrorResponse> handleInvalidPlanningEntryData(InvalidPlanningEntryDataException ex) {
         return build(HttpStatus.BAD_REQUEST, ex.getMessage());
     }
 
