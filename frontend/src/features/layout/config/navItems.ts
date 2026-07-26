@@ -6,6 +6,7 @@ import {
   PiggyBank,
   Tags,
   Target,
+  TrendingUp,
   Wallet,
   type LucideIcon,
 } from 'lucide-react'
@@ -26,4 +27,5 @@ export const navItems: NavItem[] = [
   { label: 'Orçamentos', path: '/budgets', icon: PiggyBank },
   { label: 'Metas', path: '/goals', icon: Target },
   { label: 'Planejamento', path: '/planning', icon: CalendarClock },
+  { label: 'Investimentos', path: '/investments', icon: TrendingUp },
 ]

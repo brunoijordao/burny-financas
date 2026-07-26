@@ -11,6 +11,8 @@ import com.burny.financas.categories.exception.DuplicateKeywordException;
 import com.burny.financas.categories.exception.InvalidCategoryHierarchyException;
 import com.burny.financas.goals.exception.GoalNotFoundException;
 import com.burny.financas.goals.exception.InvalidGoalDataException;
+import com.burny.financas.investments.exception.InvalidInvestmentDataException;
+import com.burny.financas.investments.exception.InvestmentAssetNotFoundException;
 import com.burny.financas.pdfimport.exception.InvalidPdfImportDataException;
 import com.burny.financas.pdfimport.exception.PdfImportItemNotEditableException;
 import com.burny.financas.pdfimport.exception.PdfImportNotFoundException;
@@ -121,6 +123,16 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(InvalidPlanningEntryDataException.class)
     public ResponseEntity<ErrorResponse> handleInvalidPlanningEntryData(InvalidPlanningEntryDataException ex) {
+        return build(HttpStatus.BAD_REQUEST, ex.getMessage());
+    }
+
+    @ExceptionHandler(InvestmentAssetNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleInvestmentAssetNotFound(InvestmentAssetNotFoundException ex) {
+        return build(HttpStatus.NOT_FOUND, ex.getMessage());
+    }
+
+    @ExceptionHandler(InvalidInvestmentDataException.class)
+    public ResponseEntity<ErrorResponse> handleInvalidInvestmentData(InvalidInvestmentDataException ex) {
         return build(HttpStatus.BAD_REQUEST, ex.getMessage());
     }
 

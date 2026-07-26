@@ -25,7 +25,7 @@ Sistema de gestão financeira pessoal multiusuário, construído com um workflow
 - Zustand (estado global e de UI)
 - React Hook Form + Zod
 - Axios (com interceptor de refresh automático)
-- Recharts (gráficos do dashboard e fluxo de caixa)
+- Recharts (gráficos do dashboard, fluxo de caixa e carteira de investimentos)
 - React Dropzone (upload de arquivos)
 
 **Banco de dados**
@@ -40,7 +40,7 @@ Sistema de gestão financeira pessoal multiusuário, construído com um workflow
 
 Cada funcionalidade nasce como uma **change** isolada: uma proposta (`proposal.md`), um design técnico com as decisões e trade-offs (`design.md`), critérios de aceite em formato Given/When/Then (`spec.md`) e uma lista de tarefas (`tasks.md`). Só depois de implementada, testada contra o banco de produção e validada manualmente, a change é arquivada e suas capacidades passam a integrar a especificação permanente do sistema.
 
-Esse processo intencionalmente prioriza **validação contra o ambiente real** (Oracle Autonomous Database, não apenas H2 em memória) antes de qualquer change ser considerada concluída — incluindo testes manuais de fluxos críticos como expiração de token, transferências atômicas, integração com IA externa e isolamento entre usuários.
+Esse processo intencionalmente prioriza **validação contra o ambiente real** (Oracle Autonomous Database, não apenas H2 em memória) antes de qualquer change ser considerada concluída — incluindo testes manuais de fluxos críticos como expiração de token, transferências atômicas, integração com IA externa, cálculo de custo médio ponderado e isolamento entre usuários.
 
 Para o desenho visual das telas, o projeto usa uma skill de design dedicada que força decisões de paleta, tipografia e layout intencionais para cada tela nova, evitando o "look" genérico de admin template.
 
@@ -118,6 +118,15 @@ Para o desenho visual das telas, o projeto usa uma skill de design dedicada que 
 - Alertas visuais para vencimentos próximos e lançamentos atrasados
 - Fluxo de caixa projetado somando saldo atual aos lançamentos pendentes (diferente da projeção simples do dashboard, que considera só o que já foi lançado)
 
+### ✅ Investimentos
+- Cadastro de ativos (ações, FIIs, CDB, Tesouro Direto, criptomoedas), com vínculo opcional e somente-leitura a uma conta existente (ex: corretora)
+- Registro de aportes (compra) e resgates (venda), com **custo médio ponderado** calculado a partir do histórico completo de operações — validado manualmente com múltiplas compras em preços diferentes
+- Resgate parcial reduz apenas a quantidade, preservando o preço médio das unidades remanescentes
+- Valorações datadas (ledger de valor de mercado informado manualmente), permitindo reconstituir a evolução do patrimônio ao longo do tempo sem depender de integração externa de cotação
+- Rentabilidade por ativo e por carteira, com comparação manual a benchmarks (CDI, IBOVESPA, IPCA)
+- Distribuição percentual da carteira por tipo de ativo e gráfico de evolução do patrimônio (Recharts)
+- Módulo desacoplado do saldo de contas bancárias: aportes/resgates nunca alteram o saldo de nenhuma `Account` — validado explicitamente mantendo o saldo da conta vinculada em R$ 0,00 durante todo o teste
+
 ---
 
 ## Decisões técnicas de destaque
@@ -131,3 +140,5 @@ Para o desenho visual das telas, o projeto usa uma skill de design dedicada que 
 - **Reaproveitamento consistente de lógica de agregação**: o cálculo de gasto por categoria usado nos orçamentos é a mesma query já usada pelo dashboard, evitando dois caminhos de cálculo divergentes para o mesmo dado.
 - **Um único serviço de efeito em saldo (`TransactionBalanceService`) reaproveitado por três fluxos diferentes**: lançamento manual de transação, confirmação de item importado via PDF/IA e baixa de contas a pagar/receber — nenhum desses caminhos duplica a regra de negócio de débito/crédito.
 - **Status derivado em vez de persistido**: "atrasado" é calculado comparando data de vencimento com a data atual no momento da consulta, evitando mais um job agendado no sistema e eliminando qualquer risco de status desatualizado.
+- **Posição de investimento sempre recalculada a partir das operações**, nunca armazenada como campo isolado — evita divergência entre a posição exibida e o histórico real de compras/vendas.
+- **Módulo de investimentos deliberadamente desacoplado do saldo de contas bancárias** nesta fase do projeto, evitando integração automática prematura entre dois domínios que ainda podem evoluir de forma independente.
