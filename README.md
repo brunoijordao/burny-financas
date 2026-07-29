@@ -14,7 +14,8 @@ Sistema de gestão financeira pessoal multiusuário, construído com um workflow
 - Spring Data JPA + Hibernate
 - Flyway (migrations versionadas)
 - Bucket4j (rate limiting)
-- Apache PDFBox (extração de texto de PDF)
+- Apache PDFBox (extração de texto de PDF e geração de relatórios em PDF)
+- Apache POI (geração de relatórios em Excel, streaming via SXSSFWorkbook)
 - Integração com Gemini/Gemma (Google AI Studio) para interpretação de extratos
 - Lombok + MapStruct
 - OpenAPI / Swagger
@@ -40,7 +41,7 @@ Sistema de gestão financeira pessoal multiusuário, construído com um workflow
 
 Cada funcionalidade nasce como uma **change** isolada: uma proposta (`proposal.md`), um design técnico com as decisões e trade-offs (`design.md`), critérios de aceite em formato Given/When/Then (`spec.md`) e uma lista de tarefas (`tasks.md`). Só depois de implementada, testada contra o banco de produção e validada manualmente, a change é arquivada e suas capacidades passam a integrar a especificação permanente do sistema.
 
-Esse processo intencionalmente prioriza **validação contra o ambiente real** (Oracle Autonomous Database, não apenas H2 em memória) antes de qualquer change ser considerada concluída — incluindo testes manuais de fluxos críticos como expiração de token, transferências atômicas, integração com IA externa, cálculo de custo médio ponderado e isolamento entre usuários.
+Esse processo intencionalmente prioriza **validação contra o ambiente real** (Oracle Autonomous Database, não apenas H2 em memória) antes de qualquer change ser considerada concluída — incluindo testes manuais de fluxos críticos como expiração de token, transferências atômicas, integração com IA externa, cálculo de custo médio ponderado, exportação de arquivos reais e isolamento entre usuários.
 
 Para o desenho visual das telas, o projeto usa uma skill de design dedicada que força decisões de paleta, tipografia e layout intencionais para cada tela nova, evitando o "look" genérico de admin template.
 
@@ -127,6 +128,15 @@ Para o desenho visual das telas, o projeto usa uma skill de design dedicada que 
 - Distribuição percentual da carteira por tipo de ativo e gráfico de evolução do patrimônio (Recharts)
 - Módulo desacoplado do saldo de contas bancárias: aportes/resgates nunca alteram o saldo de nenhuma `Account` — validado explicitamente mantendo o saldo da conta vinculada em R$ 0,00 durante todo o teste
 
+### ✅ Relatórios
+- Três tipos de relatório: extrato detalhado por período, gastos por categoria e evolução patrimonial
+- Módulo de composição pura, sem entidade própria — reaproveita `TransactionRepository`, `AccountService` e `InvestmentPortfolioService` já existentes, sem duplicar cálculo
+- Preview em tela (JSON) separado da exportação de arquivo, permitindo conferir os dados antes de baixar
+- Exportação em PDF via Apache PDFBox (reaproveitando a dependência já existente do projeto, evitando a licença AGPL de bibliotecas alternativas)
+- Exportação em Excel via Apache POI com escrita em streaming (`SXSSFWorkbook`), evitando estourar memória em relatórios grandes
+- Conteúdo dos arquivos exportados validado byte a byte contra os dados reais do preview
+- Isolamento total por usuário em todos os tipos de relatório
+
 ---
 
 ## Decisões técnicas de destaque
@@ -137,8 +147,9 @@ Para o desenho visual das telas, o projeto usa uma skill de design dedicada que 
 - **Auto-categorização por longest-substring-match**, evitando falsos positivos entre palavras-chave parecidas (ex: "UBER" vs "UBER EATS").
 - **Processamento assíncrono com polling** para a chamada de IA na importação de PDF, evitando segurar threads de requisição HTTP por dezenas de segundos.
 - **Confirmação item a item obrigatória** na importação de extrato — a IA nunca lança uma transação diretamente, sempre passa por revisão humana antes de afetar o saldo real.
-- **Reaproveitamento consistente de lógica de agregação**: o cálculo de gasto por categoria usado nos orçamentos é a mesma query já usada pelo dashboard, evitando dois caminhos de cálculo divergentes para o mesmo dado.
+- **Reaproveitamento consistente de lógica de agregação**: o cálculo de gasto por categoria usado nos orçamentos, no dashboard e nos relatórios é a mesma query, evitando caminhos de cálculo divergentes para o mesmo dado.
 - **Um único serviço de efeito em saldo (`TransactionBalanceService`) reaproveitado por três fluxos diferentes**: lançamento manual de transação, confirmação de item importado via PDF/IA e baixa de contas a pagar/receber — nenhum desses caminhos duplica a regra de negócio de débito/crédito.
 - **Status derivado em vez de persistido**: "atrasado" é calculado comparando data de vencimento com a data atual no momento da consulta, evitando mais um job agendado no sistema e eliminando qualquer risco de status desatualizado.
 - **Posição de investimento sempre recalculada a partir das operações**, nunca armazenada como campo isolado — evita divergência entre a posição exibida e o histórico real de compras/vendas.
 - **Módulo de investimentos deliberadamente desacoplado do saldo de contas bancárias** nesta fase do projeto, evitando integração automática prematura entre dois domínios que ainda podem evoluir de forma independente.
+- **Escolha de biblioteca de PDF orientada por licença**: reaproveitar o PDFBox (Apache-2.0) já presente no projeto em vez de adicionar uma nova dependência com licença AGPL, evitando obrigações de código aberto indesejadas em um eventual uso comercial.

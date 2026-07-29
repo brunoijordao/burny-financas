@@ -12,6 +12,7 @@ import { LoginPage } from '@/pages/LoginPage'
 import { PdfImportPage } from '@/pages/PdfImportPage'
 import { PlanningPage } from '@/pages/PlanningPage'
 import { RegisterPage } from '@/pages/RegisterPage'
+import { ReportsPage } from '@/pages/ReportsPage'
 import { TransactionsPage } from '@/pages/TransactionsPage'
 
 function App() {
@@ -31,6 +32,7 @@ function App() {
           <Route path="/goals" element={<GoalsPage />} />
           <Route path="/planning" element={<PlanningPage />} />
           <Route path="/investments" element={<InvestmentsPage />} />
+          <Route path="/reports" element={<ReportsPage />} />
         </Route>
       </Route>
 

@@ -18,6 +18,7 @@ import com.burny.financas.pdfimport.exception.PdfImportItemNotEditableException;
 import com.burny.financas.pdfimport.exception.PdfImportNotFoundException;
 import com.burny.financas.planning.exception.InvalidPlanningEntryDataException;
 import com.burny.financas.planning.exception.PlanningEntryNotFoundException;
+import com.burny.financas.reports.exception.InvalidReportRequestException;
 import com.burny.financas.transactions.exception.InvalidTransactionDataException;
 import com.burny.financas.transactions.exception.TransactionNotFoundException;
 import java.time.LocalDateTime;
@@ -133,6 +134,11 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(InvalidInvestmentDataException.class)
     public ResponseEntity<ErrorResponse> handleInvalidInvestmentData(InvalidInvestmentDataException ex) {
+        return build(HttpStatus.BAD_REQUEST, ex.getMessage());
+    }
+
+    @ExceptionHandler(InvalidReportRequestException.class)
+    public ResponseEntity<ErrorResponse> handleInvalidReportRequest(InvalidReportRequestException ex) {
         return build(HttpStatus.BAD_REQUEST, ex.getMessage());
     }
 
