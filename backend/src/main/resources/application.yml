@@ -37,6 +37,9 @@ app:
     pdf-upload:
       capacity: ${RATE_LIMIT_PDF_UPLOAD_CAPACITY:10}
       refill-period-seconds: ${RATE_LIMIT_PDF_UPLOAD_REFILL_SECONDS:3600}
+    ai-agent:
+      capacity: ${RATE_LIMIT_AI_AGENT_CAPACITY:30}
+      refill-period-seconds: ${RATE_LIMIT_AI_AGENT_REFILL_SECONDS:3600}
   attachments:
     storage-path: ${ATTACHMENTS_STORAGE_PATH:./data/attachments}
   pdf-imports:
@@ -52,6 +55,15 @@ app:
     # This is inherent to the model, not a bug; the async pipeline (see design.md "Decision 1")
     # already keeps this off the request thread, so a long wait here doesn't block the UI.
     read-timeout-ms: ${GEMMA_READ_TIMEOUT_MS:300000}
+  ai-agent:
+    # Entirely independent from app.gemma.* above (design.md Decision 6): separate model, timeouts,
+    # and env vars so pdf-import's configuration is never touched by this feature.
+    base-url: ${AI_AGENT_BASE_URL:https://generativelanguage.googleapis.com}
+    model: ${GEMINI_AGENT_MODEL:gemini-2.5-flash}
+    api-key: ${GEMINI_API_KEY:}
+    connect-timeout-ms: ${AI_AGENT_CONNECT_TIMEOUT_MS:5000}
+    read-timeout-ms: ${AI_AGENT_READ_TIMEOUT_MS:30000}
+    max-history-messages: ${AI_AGENT_MAX_HISTORY_MESSAGES:40}
 
 springdoc:
   swagger-ui:
@@ -112,5 +124,8 @@ app:
       capacity: 10000
       refill-period-seconds: 60
     pdf-upload:
+      capacity: 10000
+      refill-period-seconds: 60
+    ai-agent:
       capacity: 10000
       refill-period-seconds: 60

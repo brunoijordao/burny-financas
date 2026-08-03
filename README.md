@@ -16,7 +16,7 @@ Sistema de gestão financeira pessoal multiusuário, construído com um workflow
 - Bucket4j (rate limiting)
 - Apache PDFBox (extração de texto de PDF e geração de relatórios em PDF)
 - Apache POI (geração de relatórios em Excel, streaming via SXSSFWorkbook)
-- Integração com Gemini/Gemma (Google AI Studio) para interpretação de extratos
+- Integração com Gemini/Gemma (Google AI Studio) para interpretação de extratos e para o agente conversacional (function calling)
 - Lombok + MapStruct
 - OpenAPI / Swagger
 
@@ -137,6 +137,17 @@ Para o desenho visual das telas, o projeto usa uma skill de design dedicada que 
 - Conteúdo dos arquivos exportados validado byte a byte contra os dados reais do preview
 - Isolamento total por usuário em todos os tipos de relatório
 
+### ✅ Agente de IA conversacional
+- Chat em linguagem natural (`/assistant`) com acesso a dados financeiros reais do usuário, via function calling nativo do Gemini (`gemini-2.5-flash`)
+- Consultas: saldo, gastos por categoria, status de orçamento, progresso de metas, fluxo de caixa projetado, resumo de investimentos — cada uma mapeada 1:1 a um service já existente, sem duplicar lógica de negócio nem acessar o banco diretamente
+- Inserção de transações por conversa, sempre no modelo **propor → confirmar**: o agente nunca cria uma transação diretamente — ele retorna um rascunho, que só vira transação real após confirmação explícita do usuário em um endpoint separado, revalidado do zero como se fosse preenchido manualmente
+- **Isolamento por usuário garantido estruturalmente, não por instrução de prompt**: nenhum schema de tool exposto ao modelo contém um campo de identificação de usuário — o `userId` real sempre vem do token de autenticação da requisição HTTP, nunca de nada que o modelo gere, tornando impossível o agente acessar dados de outro usuário mesmo em caso de alucinação do modelo
+- Loop de function calling limitado a 3 chamadas por turno, com resposta de fallback caso o modelo não conclua
+- Contexto financeiro (saldo, contas, categorias) injetado no system prompt a cada mensagem; consultas mais custosas (gasto por período, projeções) ficam como tools sob demanda, não pré-carregadas
+- Histórico de conversa limitado tanto no frontend quanto no backend, evitando custo crescente por turno
+- Configuração de modelo e cliente HTTP totalmente independente da integração de IA já usada na importação de PDF
+- Rate limiting: 30 mensagens/hora por usuário
+
 ---
 
 ## Decisões técnicas de destaque
@@ -153,3 +164,5 @@ Para o desenho visual das telas, o projeto usa uma skill de design dedicada que 
 - **Posição de investimento sempre recalculada a partir das operações**, nunca armazenada como campo isolado — evita divergência entre a posição exibida e o histórico real de compras/vendas.
 - **Módulo de investimentos deliberadamente desacoplado do saldo de contas bancárias** nesta fase do projeto, evitando integração automática prematura entre dois domínios que ainda podem evoluir de forma independente.
 - **Escolha de biblioteca de PDF orientada por licença**: reaproveitar o PDFBox (Apache-2.0) já presente no projeto em vez de adicionar uma nova dependência com licença AGPL, evitando obrigações de código aberto indesejadas em um eventual uso comercial.
+- **Isolamento de dados do agente de IA garantido por design, não por confiança no modelo**: o identificador do usuário nunca é um campo que a IA pode preencher — é sempre extraído do contexto de autenticação da requisição, tornando estrutural (e não apenas uma instrução de prompt) a garantia de que o agente nunca acessa dados de outro usuário.
+- **Escritas via IA seguem sempre o padrão propor → confirmar em endpoints separados**: o modelo nunca tem acesso a uma tool que persiste dados diretamente; a confirmação é uma requisição autenticada comum, revalidada com as mesmas regras de uma transação criada manualmente.

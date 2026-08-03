@@ -1,5 +1,6 @@
 import {
   ArrowLeftRight,
+  Bot,
   CalendarClock,
   FileText,
   FileUp,
@@ -30,4 +31,5 @@ export const navItems: NavItem[] = [
   { label: 'Planejamento', path: '/planning', icon: CalendarClock },
   { label: 'Investimentos', path: '/investments', icon: TrendingUp },
   { label: 'Relatórios', path: '/reports', icon: FileText },
+  { label: 'Assistente', path: '/assistant', icon: Bot },
 ]

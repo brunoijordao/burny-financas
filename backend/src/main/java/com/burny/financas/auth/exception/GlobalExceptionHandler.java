@@ -3,6 +3,9 @@ package com.burny.financas.auth.exception;
 import com.burny.financas.accounts.exception.AccountNotFoundException;
 import com.burny.financas.accounts.exception.InvalidAccountDataException;
 import com.burny.financas.accounts.exception.TransferNotAllowedException;
+import com.burny.financas.agent.exception.AgentModelException;
+import com.burny.financas.agent.exception.AgentToolExecutionException;
+import com.burny.financas.agent.exception.InvalidChatRequestException;
 import com.burny.financas.auth.dto.ErrorResponse;
 import com.burny.financas.budgets.exception.BudgetNotFoundException;
 import com.burny.financas.budgets.exception.InvalidBudgetDataException;
@@ -140,6 +143,23 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(InvalidReportRequestException.class)
     public ResponseEntity<ErrorResponse> handleInvalidReportRequest(InvalidReportRequestException ex) {
         return build(HttpStatus.BAD_REQUEST, ex.getMessage());
+    }
+
+    @ExceptionHandler(InvalidChatRequestException.class)
+    public ResponseEntity<ErrorResponse> handleInvalidChatRequest(InvalidChatRequestException ex) {
+        return build(HttpStatus.BAD_REQUEST, ex.getMessage());
+    }
+
+    @ExceptionHandler(AgentModelException.class)
+    public ResponseEntity<ErrorResponse> handleAgentModelException(AgentModelException ex) {
+        log.warn("AI agent model call failed: {}", ex.getMessage());
+        return build(HttpStatus.BAD_GATEWAY, "O assistente não conseguiu responder agora. Tente novamente.");
+    }
+
+    @ExceptionHandler(AgentToolExecutionException.class)
+    public ResponseEntity<ErrorResponse> handleAgentToolExecutionException(AgentToolExecutionException ex) {
+        log.error("AI agent tool execution failed", ex);
+        return build(HttpStatus.INTERNAL_SERVER_ERROR, "O assistente não conseguiu concluir essa ação agora. Tente novamente.");
     }
 
     @ExceptionHandler(InvalidCredentialsException.class)

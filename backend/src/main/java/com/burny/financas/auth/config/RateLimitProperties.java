@@ -14,6 +14,7 @@ public class RateLimitProperties {
     private Limit login = new Limit(5, 60);
     private Limit general = new Limit(100, 60);
     private Limit pdfUpload = new Limit(10, 3600);
+    private Limit aiAgent = new Limit(30, 3600);
 
     @Getter
     @Setter

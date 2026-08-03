@@ -1,5 +1,6 @@
 package com.burny.financas.auth.config;
 
+import com.burny.financas.auth.ratelimit.AiAgentRateLimitFilter;
 import com.burny.financas.auth.ratelimit.LoginRateLimitFilter;
 import com.burny.financas.auth.ratelimit.PdfUploadRateLimitFilter;
 import com.burny.financas.auth.ratelimit.UserRateLimitFilter;
@@ -44,6 +45,7 @@ public class SecurityConfig {
     private final LoginRateLimitFilter loginRateLimitFilter;
     private final UserRateLimitFilter userRateLimitFilter;
     private final PdfUploadRateLimitFilter pdfUploadRateLimitFilter;
+    private final AiAgentRateLimitFilter aiAgentRateLimitFilter;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -56,11 +58,12 @@ public class SecurityConfig {
                         .anyRequest().authenticated()
                 )
                 .exceptionHandling(eh -> eh.authenticationEntryPoint(unauthorizedEntryPoint()))
-                // Order: login rate limit -> JWT auth -> user rate limit -> pdf upload rate limit -> ... -> UsernamePasswordAuthenticationFilter
+                // Order: login rate limit -> JWT auth -> user rate limit -> pdf upload rate limit -> ai agent rate limit -> ... -> UsernamePasswordAuthenticationFilter
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(loginRateLimitFilter, JwtAuthenticationFilter.class)
                 .addFilterAfter(userRateLimitFilter, JwtAuthenticationFilter.class)
-                .addFilterAfter(pdfUploadRateLimitFilter, UserRateLimitFilter.class);
+                .addFilterAfter(pdfUploadRateLimitFilter, UserRateLimitFilter.class)
+                .addFilterAfter(aiAgentRateLimitFilter, PdfUploadRateLimitFilter.class);
         return http.build();
     }
 
