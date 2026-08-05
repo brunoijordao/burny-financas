@@ -1,8 +1,10 @@
 import { useEffect, useState } from 'react'
 import { Bar, CartesianGrid, ComposedChart, Legend, Line, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
 
+import { formatCurrency } from '@/lib/formatters'
 import * as planningApi from '@/features/planning/api/planningApi'
 import type { ProjectedCashFlow } from '@/features/planning/api/planningApi'
+import { usePreferencesStore } from '@/features/settings/store/preferencesStore'
 
 const PROJECTION_MONTHS = 6
 const MONTH_LABELS = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez']
@@ -11,10 +13,6 @@ function formatMonth(month: string) {
   const [year, monthNumber] = month.split('-')
   const index = Number(monthNumber) - 1
   return `${MONTH_LABELS[index] ?? month}/${year.slice(2)}`
-}
-
-function formatCurrency(value: number) {
-  return value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
 }
 
 interface ProjectedCashFlowSectionProps {
@@ -29,6 +27,7 @@ interface ProjectedCashFlowSectionProps {
  * (design.md Decision 4).
  */
 export function ProjectedCashFlowSection({ refreshSignal }: ProjectedCashFlowSectionProps) {
+  const currency = usePreferencesStore((state) => state.currency)
   const [data, setData] = useState<ProjectedCashFlow | null>(null)
   const [error, setError] = useState<string | null>(null)
 
@@ -54,7 +53,7 @@ export function ProjectedCashFlowSection({ refreshSignal }: ProjectedCashFlowSec
     <div className="flex flex-col gap-4">
       <div className="flex flex-col gap-1">
         <span className="text-xs text-muted-foreground">Saldo disponível atual</span>
-        <span className="text-2xl font-semibold">{formatCurrency(data.currentAvailableBalance)}</span>
+        <span className="text-2xl font-semibold">{formatCurrency(data.currentAvailableBalance, currency)}</span>
       </div>
 
       <ResponsiveContainer width="100%" height={260}>
@@ -62,7 +61,7 @@ export function ProjectedCashFlowSection({ refreshSignal }: ProjectedCashFlowSec
           <CartesianGrid vertical={false} stroke="var(--border)" />
           <XAxis dataKey="label" tickLine={false} axisLine={false} fontSize={12} />
           <YAxis hide />
-          <Tooltip formatter={(value) => formatCurrency(Number(value ?? 0))} cursor={{ fill: 'var(--muted)' }} />
+          <Tooltip formatter={(value) => formatCurrency(Number(value ?? 0), currency)} cursor={{ fill: 'var(--muted)' }} />
           <Legend
             formatter={(value) => {
               if (value === 'totalReceivable') return 'A receber'

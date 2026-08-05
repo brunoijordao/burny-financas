@@ -148,6 +148,13 @@ Para o desenho visual das telas, o projeto usa uma skill de design dedicada que 
 - Configuração de modelo e cliente HTTP totalmente independente da integração de IA já usada na importação de PDF
 - Rate limiting: 30 mensagens/hora por usuário
 
+### ✅ Configurações
+- Preferências de exibição por usuário (moeda: BRL/USD/EUR; formato de data: DD/MM/YYYY, MM/DD/YYYY, YYYY-MM-DD), com valor padrão (BRL, DD/MM/YYYY) sem exigir nenhum registro no banco para quem nunca configurou nada — o registro só é criado no primeiro salvamento (upsert)
+- Preferências aplicadas em tempo real em todo o sistema (dashboard, transações, relatórios, investimentos, planejamento, orçamentos, metas, contas, importação de PDF) via um utilitário de formatação central e uma store compartilhada, eliminando ~20 implementações locais duplicadas de formatação de moeda/data
+- Tela `/settings` com formulário de edição das preferências
+- Tela dedicada de gerenciamento de regras de auto-categorização, consolidando em uma única visão as palavras-chave de todas as categorias — reaproveita integralmente os endpoints já existentes de `category_keywords`, sem duplicar CRUD nem criar nova lógica de resolução
+- Isolamento total por usuário
+
 ---
 
 ## Decisões técnicas de destaque

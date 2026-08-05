@@ -2,16 +2,14 @@ import { useCallback, useEffect, useState } from 'react'
 
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
+import { formatCurrency, formatDate } from '@/lib/formatters'
 import type { Account } from '@/features/accounts/api/accountsApi'
 import type { Category } from '@/features/categories/api/categoriesApi'
 import * as reportsApi from '@/features/reports/api/reportsApi'
 import type { StatementLine } from '@/features/reports/api/reportsApi'
 import { downloadBlob } from '@/features/reports/lib/download'
+import { usePreferencesStore } from '@/features/settings/store/preferencesStore'
 import { TransactionFiltersBar, type TransactionFiltersValue } from '@/features/transactions/components/TransactionFiltersBar'
-
-function formatCurrency(value: number) {
-  return value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
-}
 
 interface StatementReportViewProps {
   accounts: Account[]
@@ -22,6 +20,8 @@ interface StatementReportViewProps {
 
 /** Reuses TransactionFiltersBar so the statement report's filters stay identical to the Transactions page's own filters. */
 export function StatementReportView({ accounts, categories, filters, onFiltersChange }: StatementReportViewProps) {
+  const currency = usePreferencesStore((state) => state.currency)
+  const dateFormat = usePreferencesStore((state) => state.dateFormat)
   const [lines, setLines] = useState<StatementLine[]>([])
   const [loadError, setLoadError] = useState<string | null>(null)
   const [exporting, setExporting] = useState(false)
@@ -83,7 +83,7 @@ export function StatementReportView({ accounts, categories, filters, onFiltersCh
                 <div className="flex flex-col gap-0.5">
                   <span className="font-medium">{line.description}</span>
                   <span className="text-xs text-muted-foreground">
-                    {line.transactionDate} · {line.accountName} · {line.categoryName}
+                    {formatDate(line.transactionDate, dateFormat)} · {line.accountName} · {line.categoryName}
                   </span>
                 </div>
                 <span
@@ -92,7 +92,7 @@ export function StatementReportView({ accounts, categories, filters, onFiltersCh
                   }
                 >
                   {line.type === 'EXPENSE' ? '-' : '+'}
-                  {formatCurrency(line.amount)}
+                  {formatCurrency(line.amount, currency)}
                 </span>
               </CardContent>
             </Card>

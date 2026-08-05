@@ -1,15 +1,9 @@
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
+import { formatCurrency, formatDate } from '@/lib/formatters'
 import type { PlanningEntry } from '@/features/planning/api/planningApi'
 import { PlanningStatusBadge } from '@/features/planning/components/PlanningStatusBadge'
-
-function formatCurrency(value: number) {
-  return value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
-}
-
-function formatDate(value: string) {
-  return new Date(value + 'T00:00:00').toLocaleDateString('pt-BR')
-}
+import { usePreferencesStore } from '@/features/settings/store/preferencesStore'
 
 interface PlanningEntryListProps {
   entries: PlanningEntry[]
@@ -20,6 +14,9 @@ interface PlanningEntryListProps {
 }
 
 export function PlanningEntryList({ entries, onEdit, onDelete, onSettle, onUndoSettlement }: PlanningEntryListProps) {
+  const currency = usePreferencesStore((state) => state.currency)
+  const dateFormat = usePreferencesStore((state) => state.dateFormat)
+
   if (entries.length === 0) {
     return <p className="text-sm text-muted-foreground">Nenhum lançamento cadastrado ainda.</p>
   }
@@ -35,7 +32,7 @@ export function PlanningEntryList({ entries, onEdit, onDelete, onSettle, onUndoS
                 <PlanningStatusBadge entry={entry} />
               </div>
               <span className="text-xs text-muted-foreground">
-                Vence em {formatDate(entry.dueDate)} · {entry.accountName}
+                Vence em {formatDate(entry.dueDate, dateFormat)} · {entry.accountName}
                 {entry.categoryName ? ` · ${entry.categoryName}` : ''}
               </span>
             </div>
@@ -49,7 +46,7 @@ export function PlanningEntryList({ entries, onEdit, onDelete, onSettle, onUndoS
                 }
               >
                 {entry.type === 'PAYABLE' ? '-' : '+'}
-                {formatCurrency(entry.amount)}
+                {formatCurrency(entry.amount, currency)}
               </span>
               <div className="flex gap-2">
                 {entry.status === 'SETTLED' ? (

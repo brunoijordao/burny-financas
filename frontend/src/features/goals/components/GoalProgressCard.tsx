@@ -3,15 +3,9 @@ import { Check } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { cn } from '@/lib/utils'
+import { formatCurrency, formatDate } from '@/lib/formatters'
 import type { Goal } from '@/features/goals/api/goalsApi'
-
-function formatCurrency(value: number) {
-  return value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
-}
-
-function formatDate(value: string) {
-  return new Date(value + 'T00:00:00').toLocaleDateString('pt-BR')
-}
+import { usePreferencesStore } from '@/features/settings/store/preferencesStore'
 
 interface GoalProgressCardProps {
   goal: Goal
@@ -21,6 +15,8 @@ interface GoalProgressCardProps {
 }
 
 export function GoalProgressCard({ goal, onAddContribution, onEdit, onDelete }: GoalProgressCardProps) {
+  const currency = usePreferencesStore((state) => state.currency)
+  const dateFormat = usePreferencesStore((state) => state.dateFormat)
   const barWidth = Math.min(goal.percentComplete, 100)
 
   return (
@@ -37,7 +33,7 @@ export function GoalProgressCard({ goal, onAddContribution, onEdit, onDelete }: 
       <CardContent className="flex flex-col gap-3">
         <div>
           <p className="text-xs text-muted-foreground">
-            {formatCurrency(goal.currentAmount)} de {formatCurrency(goal.targetAmount)}
+            {formatCurrency(goal.currentAmount, currency)} de {formatCurrency(goal.targetAmount, currency)}
           </p>
           <div className="mt-1 h-2 w-full overflow-hidden rounded-full bg-secondary">
             <div className="h-full rounded-full bg-primary transition-[width]" style={{ width: `${barWidth}%` }} />
@@ -46,12 +42,12 @@ export function GoalProgressCard({ goal, onAddContribution, onEdit, onDelete }: 
         </div>
 
         <div className="flex flex-col gap-0.5 text-xs text-muted-foreground">
-          <span>Prazo: {formatDate(goal.deadline)}</span>
+          <span>Prazo: {formatDate(goal.deadline, dateFormat)}</span>
           {goal.onTrack !== null ? (
             <span className={cn(goal.onTrack ? 'text-emerald-600 dark:text-emerald-400' : 'text-destructive')}>
               {goal.onTrack
-                ? `No ritmo atual, previsão de conclusão em ${formatDate(goal.projectedCompletionDate as string)}`
-                : `No ritmo atual, a meta não será atingida até o prazo (previsão: ${formatDate(goal.projectedCompletionDate as string)})`}
+                ? `No ritmo atual, previsão de conclusão em ${formatDate(goal.projectedCompletionDate as string, dateFormat)}`
+                : `No ritmo atual, a meta não será atingida até o prazo (previsão: ${formatDate(goal.projectedCompletionDate as string, dateFormat)})`}
             </span>
           ) : null}
         </div>

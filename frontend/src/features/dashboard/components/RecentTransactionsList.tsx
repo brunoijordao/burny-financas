@@ -2,11 +2,9 @@ import { ArrowDownRight, ArrowUpRight } from 'lucide-react'
 import { Link } from 'react-router-dom'
 
 import { cn } from '@/lib/utils'
+import { formatCurrency, formatDate } from '@/lib/formatters'
 import type { Transaction } from '@/features/transactions/api/transactionsApi'
-
-function formatCurrency(value: number) {
-  return value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
-}
+import { usePreferencesStore } from '@/features/settings/store/preferencesStore'
 
 interface RecentTransactionsListProps {
   transactions: Transaction[]
@@ -14,6 +12,9 @@ interface RecentTransactionsListProps {
 
 /** Up to 10 most recent transactions, linking out to the full Transactions page (design.md Decision 5). */
 export function RecentTransactionsList({ transactions }: RecentTransactionsListProps) {
+  const currency = usePreferencesStore((state) => state.currency)
+  const dateFormat = usePreferencesStore((state) => state.dateFormat)
+
   return (
     <div className="flex flex-col gap-3">
       {transactions.length === 0 ? (
@@ -37,7 +38,7 @@ export function RecentTransactionsList({ transactions }: RecentTransactionsListP
                   </span>
                   <div className="flex flex-col">
                     <span className="text-sm font-medium">{transaction.description}</span>
-                    <span className="text-xs text-muted-foreground">{transaction.transactionDate}</span>
+                    <span className="text-xs text-muted-foreground">{formatDate(transaction.transactionDate, dateFormat)}</span>
                   </div>
                 </div>
                 <span
@@ -47,7 +48,7 @@ export function RecentTransactionsList({ transactions }: RecentTransactionsListP
                   )}
                 >
                   {isExpense ? '-' : '+'}
-                  {formatCurrency(transaction.amount)}
+                  {formatCurrency(transaction.amount, currency)}
                 </span>
               </div>
             )

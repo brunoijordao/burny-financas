@@ -3,18 +3,29 @@ import { Menu, X } from 'lucide-react'
 import { Outlet, useLocation } from 'react-router-dom'
 
 import { cn } from '@/lib/utils'
+import { usePreferencesStore } from '@/features/settings/store/preferencesStore'
 import { useSidebarStore } from '@/features/layout/store/sidebarStore'
 import { Sidebar } from '@/features/layout/components/Sidebar'
 
 export function AppLayout() {
   const isCollapsed = useSidebarStore((state) => state.isCollapsed)
   const toggleCollapsed = useSidebarStore((state) => state.toggleCollapsed)
+  const loadPreferences = usePreferencesStore((state) => state.loadPreferences)
   const [isMobileOpen, setIsMobileOpen] = useState(false)
   const location = useLocation()
 
   useEffect(() => {
     setIsMobileOpen(false)
   }, [location.pathname])
+
+  // Hydrated once per authenticated session; falls back to defaults on failure (preferencesStore).
+  // Aborts on cleanup so React StrictMode's dev-only double-invoke of this effect doesn't fire the
+  // GET twice per session bootstrap (see preferencesStore.loadPreferences).
+  useEffect(() => {
+    const controller = new AbortController()
+    void loadPreferences(controller.signal)
+    return () => controller.abort()
+  }, [loadPreferences])
 
   return (
     <div className="flex h-svh overflow-hidden bg-background text-foreground">

@@ -6,6 +6,7 @@ import {
   FileUp,
   LayoutDashboard,
   PiggyBank,
+  Settings,
   Tags,
   Target,
   TrendingUp,
@@ -32,4 +33,5 @@ export const navItems: NavItem[] = [
   { label: 'Investimentos', path: '/investments', icon: TrendingUp },
   { label: 'Relatórios', path: '/reports', icon: FileText },
   { label: 'Assistente', path: '/assistant', icon: Bot },
+  { label: 'Configurações', path: '/settings', icon: Settings },
 ]

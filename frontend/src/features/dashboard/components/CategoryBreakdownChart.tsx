@@ -1,6 +1,8 @@
 import { Bar, BarChart, Cell, LabelList, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
 
+import { formatCurrency } from '@/lib/formatters'
 import type { CategoryBreakdownItem } from '@/features/dashboard/api/dashboardApi'
+import { usePreferencesStore } from '@/features/settings/store/preferencesStore'
 
 const CATEGORY_COLORS = [
   'var(--chart-1)',
@@ -12,10 +14,6 @@ const CATEGORY_COLORS = [
 ]
 const OTHERS_COLOR = 'var(--muted-foreground)'
 const MAX_SLICES = 6
-
-function formatCurrency(value: number) {
-  return value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
-}
 
 interface ChartRow {
   name: string
@@ -42,6 +40,8 @@ interface CategoryBreakdownChartProps {
 
 /** Horizontal bar list of the month's top expense categories — proportions read faster as ranked bars than pie wedges (design.md Decision 4). */
 export function CategoryBreakdownChart({ items }: CategoryBreakdownChartProps) {
+  const currency = usePreferencesStore((state) => state.currency)
+
   if (items.length === 0) {
     return <p className="text-sm text-muted-foreground">Nenhuma despesa registrada neste mês.</p>
   }
@@ -53,12 +53,12 @@ export function CategoryBreakdownChart({ items }: CategoryBreakdownChartProps) {
       <BarChart data={rows} layout="vertical" margin={{ top: 4, right: 48, bottom: 4, left: 4 }}>
         <XAxis type="number" hide />
         <YAxis type="category" dataKey="name" width={110} tickLine={false} axisLine={false} fontSize={12} />
-        <Tooltip formatter={(value) => formatCurrency(Number(value ?? 0))} cursor={{ fill: 'var(--muted)' }} />
+        <Tooltip formatter={(value) => formatCurrency(Number(value ?? 0), currency)} cursor={{ fill: 'var(--muted)' }} />
         <Bar dataKey="total" radius={4} maxBarSize={24}>
           {rows.map((row) => (
             <Cell key={row.name} fill={row.color} />
           ))}
-          <LabelList dataKey="total" position="right" formatter={(value) => formatCurrency(Number(value ?? 0))} fontSize={12} />
+          <LabelList dataKey="total" position="right" formatter={(value) => formatCurrency(Number(value ?? 0), currency)} fontSize={12} />
         </Bar>
       </BarChart>
     </ResponsiveContainer>

@@ -2,20 +2,19 @@ import { useCallback, useEffect, useState } from 'react'
 
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { formatCurrency } from '@/lib/formatters'
 import * as accountsApi from '@/features/accounts/api/accountsApi'
 import type { Account } from '@/features/accounts/api/accountsApi'
 import { AccountList } from '@/features/accounts/components/AccountList'
 import { CreateAccountForm } from '@/features/accounts/components/CreateAccountForm'
 import { EditAccountForm } from '@/features/accounts/components/EditAccountForm'
 import { TransferForm } from '@/features/accounts/components/TransferForm'
-
-function formatCurrency(value: number) {
-  return value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
-}
+import { usePreferencesStore } from '@/features/settings/store/preferencesStore'
 
 type Panel = 'none' | 'create' | 'transfer' | { edit: Account }
 
 export function AccountsPage() {
+  const currency = usePreferencesStore((state) => state.currency)
   const [accounts, setAccounts] = useState<Account[]>([])
   const [consolidatedBalance, setConsolidatedBalance] = useState<number | null>(null)
   const [loadError, setLoadError] = useState<string | null>(null)
@@ -55,7 +54,7 @@ export function AccountsPage() {
         <p className="text-muted-foreground">
           Saldo consolidado:{' '}
           <span className="font-medium text-foreground">
-            {consolidatedBalance !== null ? formatCurrency(consolidatedBalance) : '...'}
+            {consolidatedBalance !== null ? formatCurrency(consolidatedBalance, currency) : '...'}
           </span>
         </p>
       </div>

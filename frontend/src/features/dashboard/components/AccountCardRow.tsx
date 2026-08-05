@@ -1,9 +1,7 @@
+import { formatCurrency } from '@/lib/formatters'
 import type { Account } from '@/features/accounts/api/accountsApi'
 import { AccountIcon } from '@/features/accounts/icons'
-
-function formatCurrency(value: number) {
-  return value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
-}
+import { usePreferencesStore } from '@/features/settings/store/preferencesStore'
 
 interface AccountCardRowProps {
   accounts: Account[]
@@ -11,6 +9,7 @@ interface AccountCardRowProps {
 
 /** Horizontal-scroll row of per-account cards, reusing each account's own icon/color (design.md Decision 4). */
 export function AccountCardRow({ accounts }: AccountCardRowProps) {
+  const currency = usePreferencesStore((state) => state.currency)
   const activeAccounts = accounts.filter((account) => account.active)
 
   if (activeAccounts.length === 0) {
@@ -38,7 +37,7 @@ export function AccountCardRow({ accounts }: AccountCardRowProps) {
             <div>
               <p className="text-xs text-muted-foreground">{isCreditCard ? 'Fatura atual' : 'Saldo'}</p>
               <p className="text-lg font-semibold">
-                {formatCurrency((isCreditCard ? account.currentInvoice : account.balance) ?? 0)}
+                {formatCurrency((isCreditCard ? account.currentInvoice : account.balance) ?? 0, currency)}
               </p>
             </div>
           </div>

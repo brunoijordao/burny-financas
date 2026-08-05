@@ -1,6 +1,8 @@
 import { Bar, BarChart, CartesianGrid, Legend, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
 
+import { formatCurrency } from '@/lib/formatters'
 import type { MonthlyTrendItem } from '@/features/dashboard/api/dashboardApi'
+import { usePreferencesStore } from '@/features/settings/store/preferencesStore'
 
 const MONTH_LABELS = [
   'Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez',
@@ -10,10 +12,6 @@ function formatMonth(month: string) {
   const [year, monthNumber] = month.split('-')
   const index = Number(monthNumber) - 1
   return `${MONTH_LABELS[index] ?? month}/${year.slice(2)}`
-}
-
-function formatCurrency(value: number) {
-  return value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
 }
 
 interface MonthlyTrendChartProps {
@@ -27,6 +25,7 @@ interface MonthlyTrendChartProps {
  * color alone — see add-dashboard/tasks.md section 6.
  */
 export function MonthlyTrendChart({ items }: MonthlyTrendChartProps) {
+  const currency = usePreferencesStore((state) => state.currency)
   const rows = items.map((item) => ({ ...item, label: formatMonth(item.month) }))
 
   return (
@@ -35,7 +34,7 @@ export function MonthlyTrendChart({ items }: MonthlyTrendChartProps) {
         <CartesianGrid vertical={false} stroke="var(--border)" />
         <XAxis dataKey="label" tickLine={false} axisLine={false} fontSize={12} />
         <YAxis hide />
-        <Tooltip formatter={(value) => formatCurrency(Number(value ?? 0))} cursor={{ fill: 'var(--muted)' }} />
+        <Tooltip formatter={(value) => formatCurrency(Number(value ?? 0), currency)} cursor={{ fill: 'var(--muted)' }} />
         <Legend
           formatter={(value) => (value === 'income' ? 'Receitas' : 'Despesas')}
           wrapperStyle={{ fontSize: 12 }}

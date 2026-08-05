@@ -4,6 +4,7 @@ import { RouteGuard } from '@/features/auth/components/RouteGuard'
 import { AppLayout } from '@/features/layout/components/AppLayout'
 import { AccountsPage } from '@/pages/AccountsPage'
 import { AssistantPage } from '@/pages/AssistantPage'
+import { AutoCategorizationRulesPage } from '@/pages/AutoCategorizationRulesPage'
 import { BudgetsPage } from '@/pages/BudgetsPage'
 import { CategoriesPage } from '@/pages/CategoriesPage'
 import { DashboardPage } from '@/pages/DashboardPage'
@@ -14,6 +15,7 @@ import { PdfImportPage } from '@/pages/PdfImportPage'
 import { PlanningPage } from '@/pages/PlanningPage'
 import { RegisterPage } from '@/pages/RegisterPage'
 import { ReportsPage } from '@/pages/ReportsPage'
+import { SettingsPage } from '@/pages/SettingsPage'
 import { TransactionsPage } from '@/pages/TransactionsPage'
 
 function App() {
@@ -35,6 +37,8 @@ function App() {
           <Route path="/investments" element={<InvestmentsPage />} />
           <Route path="/reports" element={<ReportsPage />} />
           <Route path="/assistant" element={<AssistantPage />} />
+          <Route path="/settings" element={<SettingsPage />} />
+          <Route path="/settings/auto-categorization" element={<AutoCategorizationRulesPage />} />
         </Route>
       </Route>
 

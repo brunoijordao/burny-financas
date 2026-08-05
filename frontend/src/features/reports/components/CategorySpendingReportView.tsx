@@ -4,14 +4,12 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import { formatCurrency } from '@/lib/formatters'
 import { CategoryBreakdownChart } from '@/features/dashboard/components/CategoryBreakdownChart'
 import * as reportsApi from '@/features/reports/api/reportsApi'
 import type { CategorySpending, CategorySpendingFilters } from '@/features/reports/api/reportsApi'
 import { downloadBlob } from '@/features/reports/lib/download'
-
-function formatCurrency(value: number) {
-  return value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
-}
+import { usePreferencesStore } from '@/features/settings/store/preferencesStore'
 
 interface CategorySpendingReportViewProps {
   period: CategorySpendingFilters
@@ -19,6 +17,7 @@ interface CategorySpendingReportViewProps {
 }
 
 export function CategorySpendingReportView({ period, onPeriodChange }: CategorySpendingReportViewProps) {
+  const currency = usePreferencesStore((state) => state.currency)
   const [categories, setCategories] = useState<CategorySpending[]>([])
   const [loadError, setLoadError] = useState<string | null>(null)
   const [exporting, setExporting] = useState(false)
@@ -88,7 +87,7 @@ export function CategorySpendingReportView({ period, onPeriodChange }: CategoryS
                 <CardContent className="flex items-center justify-between gap-3 py-3">
                   <span className="font-medium">{category.categoryName}</span>
                   <span className="text-sm text-muted-foreground">
-                    {formatCurrency(category.total)} · {category.percentage.toFixed(2)}%
+                    {formatCurrency(category.total, currency)} · {category.percentage.toFixed(2)}%
                   </span>
                 </CardContent>
               </Card>

@@ -1,12 +1,10 @@
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { formatCurrency } from '@/lib/formatters'
 import type { Account } from '@/features/accounts/api/accountsApi'
 import { AccountIcon } from '@/features/accounts/icons'
 import { accountTypeLabels } from '@/features/accounts/schemas'
-
-function formatCurrency(value: number) {
-  return value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
-}
+import { usePreferencesStore } from '@/features/settings/store/preferencesStore'
 
 interface AccountListProps {
   accounts: Account[]
@@ -15,6 +13,8 @@ interface AccountListProps {
 }
 
 export function AccountList({ accounts, onEdit, onDelete }: AccountListProps) {
+  const currency = usePreferencesStore((state) => state.currency)
+
   if (accounts.length === 0) {
     return <p className="text-sm text-muted-foreground">Nenhuma conta cadastrada ainda.</p>
   }
@@ -41,15 +41,15 @@ export function AccountList({ accounts, onEdit, onDelete }: AccountListProps) {
               {isCreditCard ? (
                 <div className="flex flex-col gap-0.5">
                   <span className="text-xs text-muted-foreground">Fatura atual</span>
-                  <span className="text-lg font-semibold">{formatCurrency(account.currentInvoice ?? 0)}</span>
+                  <span className="text-lg font-semibold">{formatCurrency(account.currentInvoice ?? 0, currency)}</span>
                   <span className="text-xs text-muted-foreground">
-                    Limite: {formatCurrency(account.creditLimit ?? 0)}
+                    Limite: {formatCurrency(account.creditLimit ?? 0, currency)}
                   </span>
                 </div>
               ) : (
                 <div className="flex flex-col gap-0.5">
                   <span className="text-xs text-muted-foreground">Saldo</span>
-                  <span className="text-lg font-semibold">{formatCurrency(account.balance ?? 0)}</span>
+                  <span className="text-lg font-semibold">{formatCurrency(account.balance ?? 0, currency)}</span>
                 </div>
               )}
 

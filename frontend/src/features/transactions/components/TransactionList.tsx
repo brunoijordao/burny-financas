@@ -1,12 +1,10 @@
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
+import { formatCurrency, formatDate } from '@/lib/formatters'
 import type { Account } from '@/features/accounts/api/accountsApi'
 import type { Category } from '@/features/categories/api/categoriesApi'
+import { usePreferencesStore } from '@/features/settings/store/preferencesStore'
 import type { PagedResult, Transaction } from '@/features/transactions/api/transactionsApi'
-
-function formatCurrency(value: number) {
-  return value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
-}
 
 function flattenCategories(categories: Category[]): Map<number, string> {
   const map = new Map<number, string>()
@@ -36,6 +34,8 @@ export function TransactionList({
   onManageAttachments,
   onPageChange,
 }: TransactionListProps) {
+  const currency = usePreferencesStore((state) => state.currency)
+  const dateFormat = usePreferencesStore((state) => state.dateFormat)
   const accountNames = new Map(accounts.map((account) => [account.id, account.name]))
   const categoryNames = flattenCategories(categories)
 
@@ -51,7 +51,7 @@ export function TransactionList({
             <div className="flex flex-col gap-0.5">
               <span className="font-medium">{transaction.description}</span>
               <span className="text-xs text-muted-foreground">
-                {transaction.transactionDate} · {accountNames.get(transaction.accountId) ?? 'Conta removida'}
+                {formatDate(transaction.transactionDate, dateFormat)} · {accountNames.get(transaction.accountId) ?? 'Conta removida'}
                 {transaction.categoryId != null ? ` · ${categoryNames.get(transaction.categoryId) ?? 'Categoria'}` : ''}
                 {transaction.recurrenceId != null ? ' · Recorrente' : ''}
               </span>
@@ -65,7 +65,7 @@ export function TransactionList({
                 }
               >
                 {transaction.type === 'EXPENSE' ? '-' : '+'}
-                {formatCurrency(transaction.amount)}
+                {formatCurrency(transaction.amount, currency)}
               </span>
               <div className="flex gap-1">
                 <Button variant="outline" size="sm" onClick={() => onManageAttachments(transaction)}>

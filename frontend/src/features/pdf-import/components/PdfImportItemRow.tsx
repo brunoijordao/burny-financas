@@ -6,20 +6,18 @@ import { isAxiosError } from 'axios'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import { formatCurrency, formatDate } from '@/lib/formatters'
 import type { Category } from '@/features/categories/api/categoriesApi'
 import type { PdfImportItem } from '@/features/pdf-import/api/pdfImportApi'
 import {
   editPdfImportItemSchema,
   type EditPdfImportItemFormValues,
 } from '@/features/pdf-import/schemas'
+import { usePreferencesStore } from '@/features/settings/store/preferencesStore'
 import { transactionTypeLabels, transactionTypes } from '@/features/transactions/schemas'
 
 const selectClassName =
   'flex h-10 w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring'
-
-function formatCurrency(value: number) {
-  return value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
-}
 
 function flattenCategories(categories: Category[]): { id: number; label: string }[] {
   return categories.flatMap((category) => [
@@ -37,6 +35,8 @@ interface PdfImportItemRowProps {
 }
 
 export function PdfImportItemRow({ item, categories, onSave, onDiscard, onConfirm }: PdfImportItemRowProps) {
+  const currency = usePreferencesStore((state) => state.currency)
+  const dateFormat = usePreferencesStore((state) => state.dateFormat)
   const [editing, setEditing] = useState(false)
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -91,12 +91,12 @@ export function PdfImportItemRow({ item, categories, onSave, onDiscard, onConfir
         <div className="flex flex-col">
           <span>{item.description}</span>
           <span className="text-xs text-muted-foreground">
-            {item.transactionDate} · {item.status === 'CONFIRMED' ? 'Confirmada' : 'Descartada'}
+            {formatDate(item.transactionDate, dateFormat)} · {item.status === 'CONFIRMED' ? 'Confirmada' : 'Descartada'}
           </span>
         </div>
         <span className={item.type === 'EXPENSE' ? 'font-semibold text-destructive' : 'font-semibold text-emerald-600 dark:text-emerald-400'}>
           {item.type === 'EXPENSE' ? '-' : '+'}
-          {formatCurrency(item.amount)}
+          {formatCurrency(item.amount, currency)}
         </span>
       </div>
     )
@@ -162,14 +162,14 @@ export function PdfImportItemRow({ item, categories, onSave, onDiscard, onConfir
         <div className="flex flex-col">
           <span className="font-medium">{item.description}</span>
           <span className="text-xs text-muted-foreground">
-            {item.transactionDate}
+            {formatDate(item.transactionDate, dateFormat)}
             {categoryName ? ` · ${categoryName}` : ' · Sem categoria'}
           </span>
         </div>
         <div className="flex items-center gap-3">
           <span className={item.type === 'EXPENSE' ? 'font-semibold text-destructive' : 'font-semibold text-emerald-600 dark:text-emerald-400'}>
             {item.type === 'EXPENSE' ? '-' : '+'}
-            {formatCurrency(item.amount)}
+            {formatCurrency(item.amount, currency)}
           </span>
           <div className="flex gap-1">
             <Button type="button" variant="outline" size="sm" disabled={busy} onClick={() => setEditing(true)}>

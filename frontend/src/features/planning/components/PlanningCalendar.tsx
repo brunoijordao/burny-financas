@@ -3,10 +3,12 @@ import { ChevronLeft, ChevronRight } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
+import { formatCurrency } from '@/lib/formatters'
 import * as planningApi from '@/features/planning/api/planningApi'
 import type { PlanningEntry } from '@/features/planning/api/planningApi'
 import { buildCalendarGrid } from '@/features/planning/lib/calendarGrid'
 import { getPlanningUrgency } from '@/features/planning/lib/urgency'
+import { usePreferencesStore } from '@/features/settings/store/preferencesStore'
 
 const WEEKDAY_LABELS = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb']
 const MAX_VISIBLE_PER_DAY = 3
@@ -28,6 +30,7 @@ function currentMonth() {
 }
 
 function EntryChip({ entry }: { entry: PlanningEntry }) {
+  const currency = usePreferencesStore((state) => state.currency)
   const urgency = getPlanningUrgency(entry)
   return (
     <div
@@ -36,7 +39,7 @@ function EntryChip({ entry }: { entry: PlanningEntry }) {
         entry.type === 'PAYABLE' ? 'bg-destructive/15 text-destructive' : 'bg-emerald-500/15 text-emerald-700 dark:text-emerald-400',
         urgency === 'overdue' && 'ring-1 ring-destructive',
       )}
-      title={`${entry.description} · ${entry.amount.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}`}
+      title={`${entry.description} · ${formatCurrency(entry.amount, currency)}`}
     >
       {entry.type === 'PAYABLE' ? '−' : '+'} {entry.description}
     </div>

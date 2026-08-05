@@ -1,12 +1,10 @@
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
+import { formatCurrency } from '@/lib/formatters'
 import { CategoryIcon } from '@/features/categories/icons'
 import type { Budget } from '@/features/budgets/api/budgetsApi'
 import { BudgetProgressBar } from '@/features/budgets/components/BudgetProgressBar'
-
-function formatCurrency(value: number) {
-  return value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
-}
+import { usePreferencesStore } from '@/features/settings/store/preferencesStore'
 
 interface BudgetListProps {
   budgets: Budget[]
@@ -15,6 +13,8 @@ interface BudgetListProps {
 }
 
 export function BudgetList({ budgets, onEdit, onDelete }: BudgetListProps) {
+  const currency = usePreferencesStore((state) => state.currency)
+
   if (budgets.length === 0) {
     return <p className="text-sm text-muted-foreground">Nenhum orçamento definido para este mês ainda.</p>
   }
@@ -34,8 +34,8 @@ export function BudgetList({ budgets, onEdit, onDelete }: BudgetListProps) {
               <div className="flex flex-col">
                 <span className="font-medium">{budget.categoryName}</span>
                 <span className="text-xs text-muted-foreground">
-                  {formatCurrency(budget.spentAmount)}
-                  {budget.limitAmount !== null ? ` de ${formatCurrency(budget.limitAmount)}` : ' gastos'}
+                  {formatCurrency(budget.spentAmount, currency)}
+                  {budget.limitAmount !== null ? ` de ${formatCurrency(budget.limitAmount, currency)}` : ' gastos'}
                 </span>
               </div>
             </div>

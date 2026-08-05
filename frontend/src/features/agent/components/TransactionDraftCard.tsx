@@ -2,16 +2,9 @@ import { useState } from 'react'
 import { Check, X } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
+import { formatCurrency, formatDate } from '@/lib/formatters'
 import type { TransactionDraft } from '@/features/agent/api/agentApi'
-
-function formatCurrency(value: number) {
-  return value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
-}
-
-function formatDate(value: string) {
-  const [year, month, day] = value.split('-')
-  return `${day}/${month}/${year}`
-}
+import { usePreferencesStore } from '@/features/settings/store/preferencesStore'
 
 interface TransactionDraftCardProps {
   draft: TransactionDraft
@@ -25,6 +18,8 @@ interface TransactionDraftCardProps {
  * flow, so "this requires your action" reads at a glance.
  */
 export function TransactionDraftCard({ draft, onConfirm, onDecline }: TransactionDraftCardProps) {
+  const currency = usePreferencesStore((state) => state.currency)
+  const dateFormat = usePreferencesStore((state) => state.dateFormat)
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [resolved, setResolved] = useState<'confirmed' | 'declined' | null>(null)
@@ -69,12 +64,12 @@ export function TransactionDraftCard({ draft, onConfirm, onDecline }: Transactio
             <span className="font-medium text-foreground">{draft.description}</span>
             <span className={isExpense ? 'font-semibold text-destructive' : 'font-semibold text-emerald-600 dark:text-emerald-400'}>
               {isExpense ? '-' : '+'}
-              {formatCurrency(draft.amount)}
+              {formatCurrency(draft.amount, currency)}
             </span>
           </div>
           <p className="mt-1 text-sm text-muted-foreground">
             {draft.accountName}
-            {draft.categoryName ? ` · ${draft.categoryName}` : ' · Sem categoria'} · {formatDate(draft.date)}
+            {draft.categoryName ? ` · ${draft.categoryName}` : ' · Sem categoria'} · {formatDate(draft.date, dateFormat)}
           </p>
 
           {error ? <p className="mt-2 text-sm text-destructive">{error}</p> : null}
