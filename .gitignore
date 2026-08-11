@@ -1,6 +1,7 @@
 wallet/
 openspec/
 escopo.md
+/.env
 
 # Ignorar configurações locais
 .claude/settings.local.json

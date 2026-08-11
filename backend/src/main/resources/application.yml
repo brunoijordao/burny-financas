@@ -88,7 +88,7 @@ spring:
     activate:
       on-profile: prod
   datasource:
-    url: jdbc:oracle:thin:@${DB_HOST}:${DB_PORT}/${DB_SERVICE}
+    url: jdbc:oracle:thin:@${DB_CONNECTION_STRING}
     username: ${DB_USERNAME}
     password: ${DB_PASSWORD}
     driver-class-name: oracle.jdbc.OracleDriver
