@@ -5,19 +5,22 @@ import { cva, type VariantProps } from 'class-variance-authority'
 import { cn } from '@/lib/utils'
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-colors disabled:pointer-events-none disabled:opacity-50 outline-none focus-visible:ring-2 focus-visible:ring-ring",
+  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-button text-sm font-medium transition-colors disabled:pointer-events-none disabled:opacity-50 outline-none focus-visible:ring-1 focus-visible:ring-ring",
   {
     variants: {
+      // Variant names mirror DESIGN.md's button roles:
+      // default = Primary Filled, secondary = Secondary Ghost, outline = Outline Button.
       variant: {
         default: 'bg-primary text-primary-foreground hover:opacity-90',
-        outline: 'border border-input bg-transparent hover:bg-secondary',
-        ghost: 'hover:bg-secondary',
-        link: 'text-primary underline-offset-4 hover:underline',
+        secondary: 'bg-secondary text-secondary-foreground hover:opacity-80',
+        outline: 'border border-input bg-transparent text-foreground hover:bg-secondary',
+        ghost: 'text-foreground hover:bg-secondary',
+        link: 'text-foreground underline-offset-4 hover:underline',
       },
       size: {
         default: 'h-10 px-4 py-2',
-        sm: 'h-9 rounded-md px-3',
-        lg: 'h-11 rounded-md px-8',
+        sm: 'h-9 px-3',
+        lg: 'h-11 px-8',
       },
     },
     defaultVariants: {

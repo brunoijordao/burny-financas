@@ -6,6 +6,7 @@ import { isAxiosError } from 'axios'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import { selectFieldClassName as selectClassName } from '@/components/ui/select-field'
 import type { Account } from '@/features/accounts/api/accountsApi'
 import type { Category } from '@/features/categories/api/categoriesApi'
 import type { Transaction } from '@/features/transactions/api/transactionsApi'
@@ -15,9 +16,6 @@ import {
   transactionTypes,
   type EditTransactionFormValues,
 } from '@/features/transactions/schemas'
-
-const selectClassName =
-  'flex h-10 w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring'
 
 function flattenCategories(categories: Category[]): { id: number; label: string }[] {
   return categories.flatMap((category) => [

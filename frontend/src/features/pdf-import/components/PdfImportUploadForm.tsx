@@ -4,12 +4,10 @@ import { isAxiosError } from 'axios'
 
 import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
+import { selectFieldClassName as selectClassName } from '@/components/ui/select-field'
 import type { Account } from '@/features/accounts/api/accountsApi'
 
 const ACCEPTED_TYPES = { 'application/pdf': ['.pdf'] }
-
-const selectClassName =
-  'flex h-10 w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring'
 
 interface PdfImportUploadFormProps {
   accounts: Account[]
@@ -74,7 +72,7 @@ export function PdfImportUploadForm({ accounts, onUpload, onCancel }: PdfImportU
 
       <div
         {...getRootProps()}
-        className={`flex cursor-pointer flex-col items-center justify-center rounded-md border-2 border-dashed p-6 text-sm text-muted-foreground ${
+        className={`flex cursor-pointer flex-col items-center justify-center rounded-card border-2 border-dashed p-6 text-sm text-muted-foreground ${
           isDragActive ? 'border-ring bg-accent' : 'border-input'
         }`}
       >

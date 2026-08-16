@@ -6,12 +6,10 @@ import { isAxiosError } from 'axios'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import { selectFieldClassName as selectClassName } from '@/components/ui/select-field'
 import type { Account } from '@/features/accounts/api/accountsApi'
 import { iconOptions } from '@/features/accounts/icons'
 import { editAccountSchema, type EditAccountFormValues } from '@/features/accounts/schemas'
-
-const selectClassName =
-  'flex h-10 w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring'
 
 interface EditAccountFormProps {
   account: Account
@@ -75,7 +73,7 @@ export function EditAccountForm({ account, onSubmit, onCancel }: EditAccountForm
           <input
             id="edit-color"
             type="color"
-            className="h-10 w-14 rounded-md border border-input bg-transparent p-1"
+            className="h-10 w-14 rounded-input border border-input bg-muted p-1"
             {...register('color')}
           />
         </div>

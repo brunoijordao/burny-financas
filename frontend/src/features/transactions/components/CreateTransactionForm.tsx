@@ -6,6 +6,7 @@ import { isAxiosError } from 'axios'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import { selectFieldClassName as selectClassName } from '@/components/ui/select-field'
 import type { Account } from '@/features/accounts/api/accountsApi'
 import type { Category } from '@/features/categories/api/categoriesApi'
 import {
@@ -16,9 +17,6 @@ import {
   transactionTypes,
   type CreateTransactionFormValues,
 } from '@/features/transactions/schemas'
-
-const selectClassName =
-  'flex h-10 w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring'
 
 function flattenCategories(categories: Category[]): { id: number; label: string }[] {
   return categories.flatMap((category) => [
@@ -163,7 +161,7 @@ export function CreateTransactionForm({ accounts, categories, onSubmit, onCancel
       </div>
 
       {isRecurring ? (
-        <div className="flex flex-col gap-4 rounded-md border border-input p-4">
+        <div className="flex flex-col gap-4 rounded-card border border-input p-4">
           <div className="flex flex-col gap-1.5">
             <Label htmlFor="frequency">Frequência</Label>
             <select id="frequency" className={selectClassName} {...register('frequency')}>

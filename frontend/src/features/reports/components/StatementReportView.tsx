@@ -88,7 +88,7 @@ export function StatementReportView({ accounts, categories, filters, onFiltersCh
                 </div>
                 <span
                   className={
-                    line.type === 'EXPENSE' ? 'font-semibold text-destructive' : 'font-semibold text-emerald-600 dark:text-emerald-400'
+                    line.type === 'EXPENSE' ? 'font-semibold text-destructive' : 'font-semibold text-foreground'
                   }
                 >
                   {line.type === 'EXPENSE' ? '-' : '+'}

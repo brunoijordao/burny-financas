@@ -25,7 +25,7 @@ export function PortfolioSummaryCard({ summary }: PortfolioSummaryCardProps) {
         <span
           className={cn(
             'text-2xl font-semibold',
-            summary.profitabilityAmount >= 0 ? 'text-emerald-600 dark:text-emerald-400' : 'text-destructive',
+            summary.profitabilityAmount >= 0 ? 'text-foreground' : 'text-destructive',
           )}
         >
           {summary.profitabilityAmount >= 0 ? '+' : ''}

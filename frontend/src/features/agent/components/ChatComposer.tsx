@@ -38,7 +38,7 @@ export function ChatComposer({ disabled, onSend }: ChatComposerProps) {
         rows={1}
         placeholder="Pergunte sobre seus gastos ou descreva uma transação..."
         aria-label="Mensagem para o assistente"
-        className="max-h-40 min-h-10 flex-1 resize-none rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm outline-none placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+        className="max-h-40 min-h-10 flex-1 resize-none rounded-input border border-input bg-muted px-2.5 py-2 text-sm outline-none placeholder:text-muted-foreground focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
       />
       <Button type="button" size="default" disabled={disabled || !trimmed} onClick={submit} aria-label="Enviar mensagem">
         <SendHorizontal className="size-4" />

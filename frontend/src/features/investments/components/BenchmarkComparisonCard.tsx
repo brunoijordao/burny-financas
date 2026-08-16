@@ -5,13 +5,11 @@ import { useForm } from 'react-hook-form'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import { selectFieldClassName as selectClassName } from '@/components/ui/select-field'
 import { cn } from '@/lib/utils'
 import * as investmentsApi from '@/features/investments/api/investmentsApi'
 import type { BenchmarkComparison } from '@/features/investments/api/investmentsApi'
 import { benchmarkComparisonSchema, type BenchmarkComparisonFormValues } from '@/features/investments/schemas'
-
-const selectClassName =
-  'flex h-10 w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring'
 
 const benchmarkLabels: Record<BenchmarkComparisonFormValues['benchmarkType'], string> = {
   CDI: 'CDI',
@@ -109,7 +107,7 @@ export function BenchmarkComparisonCard() {
       </form>
 
       {result ? (
-        <div className="grid gap-4 sm:grid-cols-2 rounded-md border border-border p-4">
+        <div className="grid gap-4 sm:grid-cols-2 rounded-card border border-border p-4">
           <div className="flex flex-col gap-1">
             <span className="text-xs text-muted-foreground">{benchmarkLabels[result.benchmarkType]} no período</span>
             <span className="text-xl font-semibold">{formatPercentage(result.benchmarkPercentage)}</span>
@@ -120,7 +118,7 @@ export function BenchmarkComparisonCard() {
               className={cn(
                 'text-xl font-semibold',
                 result.portfolioReturnPercentage !== null && result.portfolioReturnPercentage >= 0
-                  ? 'text-emerald-600 dark:text-emerald-400'
+                  ? 'text-foreground'
                   : 'text-destructive',
               )}
             >

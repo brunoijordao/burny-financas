@@ -46,23 +46,23 @@ export function TransactionDraftCard({ draft, onConfirm, onDecline }: Transactio
 
   if (resolved) {
     return (
-      <div className="ml-9 rounded-xl border border-border bg-card px-4 py-3 text-sm text-muted-foreground">
+      <div className="ml-9 rounded-card border border-border bg-card px-4 py-3 text-sm text-muted-foreground">
         {resolved === 'confirmed' ? 'Transação registrada.' : 'Sugestão descartada.'}
       </div>
     )
   }
 
   return (
-    <div className="ml-9 overflow-hidden rounded-xl border border-border bg-card shadow-sm">
+    <div className="ml-9 overflow-hidden rounded-card border border-border bg-card shadow-card">
       <div className="flex items-stretch">
-        <div className={isExpense ? 'w-1 shrink-0 bg-destructive' : 'w-1 shrink-0 bg-emerald-500'} aria-hidden="true" />
+        <div className={isExpense ? 'w-1 shrink-0 bg-destructive' : 'w-1 shrink-0 bg-primary'} aria-hidden="true" />
         <div className="flex-1 p-4">
           <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
             Confirmar {isExpense ? 'despesa' : 'receita'}
           </p>
           <div className="mt-1.5 flex items-baseline justify-between gap-3">
             <span className="font-medium text-foreground">{draft.description}</span>
-            <span className={isExpense ? 'font-semibold text-destructive' : 'font-semibold text-emerald-600 dark:text-emerald-400'}>
+            <span className={isExpense ? 'font-semibold text-destructive' : 'font-semibold text-foreground'}>
               {isExpense ? '-' : '+'}
               {formatCurrency(draft.amount, currency)}
             </span>

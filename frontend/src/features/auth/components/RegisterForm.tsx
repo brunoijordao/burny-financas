@@ -87,7 +87,7 @@ export function RegisterForm() {
 
       {formError ? <p className="text-sm text-destructive">{formError}</p> : null}
       {success ? (
-        <p className="text-sm text-emerald-600">Cadastro realizado! Redirecionando para o login...</p>
+        <p className="text-sm text-foreground">Cadastro realizado! Redirecionando para o login...</p>
       ) : null}
 
       <Button type="submit" disabled={isSubmitting}>

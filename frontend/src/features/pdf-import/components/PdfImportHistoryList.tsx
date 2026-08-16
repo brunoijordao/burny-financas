@@ -10,7 +10,7 @@ const STATUS_LABELS: Record<PdfImport['status'], string> = {
 
 const STATUS_CLASSNAMES: Record<PdfImport['status'], string> = {
   PROCESSING: 'text-muted-foreground',
-  READY_FOR_REVIEW: 'text-emerald-600 dark:text-emerald-400',
+  READY_FOR_REVIEW: 'text-foreground',
   FAILED: 'text-destructive',
 }
 

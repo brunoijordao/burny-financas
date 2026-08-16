@@ -35,8 +35,8 @@ function EntryChip({ entry }: { entry: PlanningEntry }) {
   return (
     <div
       className={cn(
-        'truncate rounded px-1.5 py-0.5 text-[11px] leading-tight',
-        entry.type === 'PAYABLE' ? 'bg-destructive/15 text-destructive' : 'bg-emerald-500/15 text-emerald-700 dark:text-emerald-400',
+        'truncate rounded-badge px-1.5 py-0.5 text-[11px] leading-tight',
+        entry.type === 'PAYABLE' ? 'bg-destructive/15 text-destructive' : 'bg-secondary text-foreground',
         urgency === 'overdue' && 'ring-1 ring-destructive',
       )}
       title={`${entry.description} · ${formatCurrency(entry.amount, currency)}`}
@@ -112,7 +112,7 @@ export function PlanningCalendar({ refreshSignal }: PlanningCalendarProps) {
               <div
                 key={day.date ?? `blank-${weekIndex}-${dayIndex}`}
                 className={cn(
-                  'flex min-h-20 flex-col gap-1 rounded-md border border-border p-1',
+                  'flex min-h-20 flex-col gap-1 rounded-nested border border-border p-1',
                   day.date === null && 'border-transparent',
                   day.isToday && 'border-primary bg-primary/5',
                 )}

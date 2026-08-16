@@ -42,7 +42,7 @@ export function PlanningEntryList({ entries, onEdit, onDelete, onSettle, onUndoS
                 className={
                   entry.type === 'PAYABLE'
                     ? 'font-semibold text-destructive'
-                    : 'font-semibold text-emerald-600 dark:text-emerald-400'
+                    : 'font-semibold text-foreground'
                 }
               >
                 {entry.type === 'PAYABLE' ? '-' : '+'}

@@ -6,6 +6,7 @@ import { isAxiosError } from 'axios'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import { selectFieldClassName as selectClassName } from '@/components/ui/select-field'
 import { formatCurrency, formatDate } from '@/lib/formatters'
 import type { Category } from '@/features/categories/api/categoriesApi'
 import type { PdfImportItem } from '@/features/pdf-import/api/pdfImportApi'
@@ -15,9 +16,6 @@ import {
 } from '@/features/pdf-import/schemas'
 import { usePreferencesStore } from '@/features/settings/store/preferencesStore'
 import { transactionTypeLabels, transactionTypes } from '@/features/transactions/schemas'
-
-const selectClassName =
-  'flex h-10 w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring'
 
 function flattenCategories(categories: Category[]): { id: number; label: string }[] {
   return categories.flatMap((category) => [
@@ -87,14 +85,14 @@ export function PdfImportItemRow({ item, categories, onSave, onDiscard, onConfir
 
   if (item.status !== 'PENDING') {
     return (
-      <div className="flex items-center justify-between gap-3 rounded-md border border-input px-3 py-2 text-sm opacity-70">
+      <div className="flex items-center justify-between gap-3 rounded-card border border-input px-3 py-2 text-sm opacity-70">
         <div className="flex flex-col">
           <span>{item.description}</span>
           <span className="text-xs text-muted-foreground">
             {formatDate(item.transactionDate, dateFormat)} · {item.status === 'CONFIRMED' ? 'Confirmada' : 'Descartada'}
           </span>
         </div>
-        <span className={item.type === 'EXPENSE' ? 'font-semibold text-destructive' : 'font-semibold text-emerald-600 dark:text-emerald-400'}>
+        <span className={item.type === 'EXPENSE' ? 'font-semibold text-destructive' : 'font-semibold text-foreground'}>
           {item.type === 'EXPENSE' ? '-' : '+'}
           {formatCurrency(item.amount, currency)}
         </span>
@@ -104,7 +102,7 @@ export function PdfImportItemRow({ item, categories, onSave, onDiscard, onConfir
 
   if (editing) {
     return (
-      <form className="flex flex-col gap-3 rounded-md border border-input p-3" onSubmit={submitEdit} noValidate>
+      <form className="flex flex-col gap-3 rounded-card border border-input p-3" onSubmit={submitEdit} noValidate>
         <div className="flex gap-3">
           <div className="flex flex-1 flex-col gap-1.5">
             <Label htmlFor={`desc-${item.id}`}>Descrição</Label>
@@ -157,7 +155,7 @@ export function PdfImportItemRow({ item, categories, onSave, onDiscard, onConfir
   }
 
   return (
-    <div className="flex flex-col gap-2 rounded-md border border-input px-3 py-2 text-sm">
+    <div className="flex flex-col gap-2 rounded-card border border-input px-3 py-2 text-sm">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div className="flex flex-col">
           <span className="font-medium">{item.description}</span>
@@ -167,7 +165,7 @@ export function PdfImportItemRow({ item, categories, onSave, onDiscard, onConfir
           </span>
         </div>
         <div className="flex items-center gap-3">
-          <span className={item.type === 'EXPENSE' ? 'font-semibold text-destructive' : 'font-semibold text-emerald-600 dark:text-emerald-400'}>
+          <span className={item.type === 'EXPENSE' ? 'font-semibold text-destructive' : 'font-semibold text-foreground'}>
             {item.type === 'EXPENSE' ? '-' : '+'}
             {formatCurrency(item.amount, currency)}
           </span>

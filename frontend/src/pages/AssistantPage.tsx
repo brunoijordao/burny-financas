@@ -88,7 +88,7 @@ export function AssistantPage() {
         </div>
       </div>
 
-      <div ref={scrollRef} className="flex-1 space-y-4 overflow-y-auto rounded-lg border border-border bg-card/40 p-4">
+      <div ref={scrollRef} className="flex-1 space-y-4 overflow-y-auto rounded-card border border-border bg-card/40 p-4">
         {isEmpty ? (
           <div className="flex h-full flex-col items-center justify-center gap-2 text-center text-muted-foreground">
             <Bot className="size-8" />

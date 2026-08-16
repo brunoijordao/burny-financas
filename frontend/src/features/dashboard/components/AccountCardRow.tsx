@@ -23,7 +23,7 @@ export function AccountCardRow({ accounts }: AccountCardRowProps) {
         return (
           <div
             key={account.id}
-            className="flex min-w-52 shrink-0 flex-col gap-2 rounded-lg border border-border bg-card p-4"
+            className="flex min-w-52 shrink-0 flex-col gap-2 rounded-card border border-border bg-card p-4 shadow-card"
           >
             <div className="flex items-center gap-2">
               <span

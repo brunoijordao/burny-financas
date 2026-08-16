@@ -3,6 +3,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { isAxiosError } from 'axios'
 
+import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import * as categoriesApi from '@/features/categories/api/categoriesApi'
@@ -77,10 +78,7 @@ export function KeywordManager({ category, onClose }: KeywordManagerProps) {
           <p className="text-sm text-muted-foreground">Nenhuma palavra-chave cadastrada.</p>
         ) : (
           keywords.map((keyword) => (
-            <span
-              key={keyword.id}
-              className="flex items-center gap-2 rounded-full border border-input px-3 py-1 text-sm"
-            >
+            <Badge key={keyword.id} variant="outline" className="gap-2 py-1 text-sm">
               {keyword.keyword}
               <button
                 type="button"
@@ -90,7 +88,7 @@ export function KeywordManager({ category, onClose }: KeywordManagerProps) {
               >
                 ×
               </button>
-            </span>
+            </Badge>
           ))
         )}
       </div>

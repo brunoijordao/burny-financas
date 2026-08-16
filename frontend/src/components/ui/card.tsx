@@ -7,7 +7,7 @@ function Card({ className, ...props }: React.ComponentProps<'div'>) {
     <div
       data-slot="card"
       className={cn(
-        'rounded-lg border border-border bg-card text-card-foreground shadow-sm',
+        'rounded-card border border-border bg-card text-card-foreground shadow-card',
         className,
       )}
       {...props}
@@ -19,7 +19,8 @@ function CardHeader({ className, ...props }: React.ComponentProps<'div'>) {
   return (
     <div
       data-slot="card-header"
-      className={cn('flex flex-col gap-1.5 p-6', className)}
+      // Nested Card Header spec: top corners share the card's 24px radius, transparent fill.
+      className={cn('flex flex-col gap-1.5 rounded-t-card p-5', className)}
       {...props}
     />
   )
@@ -46,14 +47,15 @@ function CardDescription({ className, ...props }: React.ComponentProps<'div'>) {
 }
 
 function CardContent({ className, ...props }: React.ComponentProps<'div'>) {
-  return <div data-slot="card-content" className={cn('p-6 pt-0', className)} {...props} />
+  return <div data-slot="card-content" className={cn('p-5 pt-0', className)} {...props} />
 }
 
 function CardFooter({ className, ...props }: React.ComponentProps<'div'>) {
   return (
     <div
       data-slot="card-footer"
-      className={cn('flex items-center p-6 pt-0', className)}
+      // Nested Card Footer spec: bottom corners share the card's 24px radius, transparent fill.
+      className={cn('flex items-center rounded-b-card p-5 pt-0', className)}
       {...props}
     />
   )

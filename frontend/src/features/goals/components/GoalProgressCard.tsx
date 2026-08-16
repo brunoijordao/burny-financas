@@ -1,5 +1,6 @@
 import { Check } from 'lucide-react'
 
+import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { cn } from '@/lib/utils'
@@ -24,10 +25,10 @@ export function GoalProgressCard({ goal, onAddContribution, onEdit, onDelete }: 
       <CardHeader className="flex flex-row items-center justify-between gap-2 space-y-0">
         <CardTitle>{goal.name}</CardTitle>
         {goal.completed ? (
-          <span className="flex items-center gap-1 rounded-full bg-primary/10 px-2 py-1 text-xs font-medium text-primary">
+          <Badge variant="solid" className="gap-1">
             <Check className="size-3.5" />
             Concluída
-          </span>
+          </Badge>
         ) : null}
       </CardHeader>
       <CardContent className="flex flex-col gap-3">
@@ -44,7 +45,7 @@ export function GoalProgressCard({ goal, onAddContribution, onEdit, onDelete }: 
         <div className="flex flex-col gap-0.5 text-xs text-muted-foreground">
           <span>Prazo: {formatDate(goal.deadline, dateFormat)}</span>
           {goal.onTrack !== null ? (
-            <span className={cn(goal.onTrack ? 'text-emerald-600 dark:text-emerald-400' : 'text-destructive')}>
+            <span className={cn(goal.onTrack ? 'text-foreground' : 'text-destructive')}>
               {goal.onTrack
                 ? `No ritmo atual, previsão de conclusão em ${formatDate(goal.projectedCompletionDate as string, dateFormat)}`
                 : `No ritmo atual, a meta não será atingida até o prazo (previsão: ${formatDate(goal.projectedCompletionDate as string, dateFormat)})`}

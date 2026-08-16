@@ -20,7 +20,7 @@ export function RecentTransactionsList({ transactions }: RecentTransactionsListP
       {transactions.length === 0 ? (
         <p className="text-sm text-muted-foreground">Nenhuma transação registrada ainda.</p>
       ) : (
-        <div className="flex flex-col divide-y divide-border rounded-lg border border-border bg-card">
+        <div className="flex flex-col divide-y divide-border rounded-card border border-border bg-card">
           {transactions.map((transaction) => {
             const isExpense = transaction.type === 'EXPENSE'
             return (
@@ -31,7 +31,7 @@ export function RecentTransactionsList({ transactions }: RecentTransactionsListP
                       'flex size-8 shrink-0 items-center justify-center rounded-full',
                       isExpense
                         ? 'bg-destructive/10 text-destructive'
-                        : 'bg-emerald-600/10 text-emerald-600 dark:text-emerald-400',
+                        : 'bg-secondary text-foreground',
                     )}
                   >
                     {isExpense ? <ArrowDownRight className="size-4" /> : <ArrowUpRight className="size-4" />}
@@ -44,7 +44,7 @@ export function RecentTransactionsList({ transactions }: RecentTransactionsListP
                 <span
                   className={cn(
                     'font-semibold',
-                    isExpense ? 'text-destructive' : 'text-emerald-600 dark:text-emerald-400',
+                    isExpense ? 'text-destructive' : 'text-foreground',
                   )}
                 >
                   {isExpense ? '-' : '+'}

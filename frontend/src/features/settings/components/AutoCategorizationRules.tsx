@@ -53,7 +53,7 @@ export function AutoCategorizationRules() {
   }
 
   return (
-    <ul className="flex flex-col divide-y divide-border rounded-lg border border-border">
+    <ul className="flex flex-col divide-y divide-border rounded-card border border-border">
       {rows.map(({ category, isSubcategory }) => {
         const isExpanded = expandedId === category.id
         return (
@@ -63,7 +63,7 @@ export function AutoCategorizationRules() {
               onClick={() => setExpandedId(isExpanded ? null : category.id)}
               aria-expanded={isExpanded}
               className={cn(
-                'flex w-full items-center justify-between gap-3 px-4 py-3 text-left outline-none transition-colors hover:bg-secondary focus-visible:ring-2 focus-visible:ring-ring',
+                'flex w-full items-center justify-between gap-3 px-4 py-3 text-left outline-none transition-colors hover:bg-secondary focus-visible:ring-1 focus-visible:ring-ring',
                 isSubcategory && 'pl-10',
               )}
             >

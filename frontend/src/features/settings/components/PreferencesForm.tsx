@@ -4,13 +4,11 @@ import { useForm } from 'react-hook-form'
 
 import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
+import { selectFieldClassName as selectClassName } from '@/components/ui/select-field'
 import { formatDate } from '@/lib/formatters'
 import * as settingsApi from '@/features/settings/api/settingsApi'
 import { currencyOptions, dateFormatOptions, preferencesSchema, type PreferencesFormValues } from '@/features/settings/schemas'
 import { usePreferencesStore } from '@/features/settings/store/preferencesStore'
-
-const selectClassName =
-  'flex h-10 w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring'
 
 const CURRENCY_LABELS: Record<(typeof currencyOptions)[number], string> = {
   BRL: 'Real brasileiro (R$)',
@@ -95,7 +93,7 @@ export function PreferencesForm() {
       </p>
 
       {formError ? <p className="text-sm text-destructive">{formError}</p> : null}
-      {!formError && isSubmitSuccessful ? <p className="text-sm text-emerald-600 dark:text-emerald-400">Preferências salvas.</p> : null}
+      {!formError && isSubmitSuccessful ? <p className="text-sm text-foreground">Preferências salvas.</p> : null}
 
       <div className="flex justify-end">
         <Button type="submit" disabled={isSubmitting}>

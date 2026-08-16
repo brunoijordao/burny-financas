@@ -57,7 +57,7 @@ export function AppLayout() {
             type="button"
             aria-label={isMobileOpen ? 'Fechar menu' : 'Abrir menu'}
             onClick={() => setIsMobileOpen((open) => !open)}
-            className="flex size-9 items-center justify-center rounded-md text-foreground outline-none transition-colors hover:bg-secondary focus-visible:ring-2 focus-visible:ring-ring"
+            className="flex size-9 items-center justify-center rounded-button text-foreground outline-none transition-colors hover:bg-secondary focus-visible:ring-1 focus-visible:ring-ring"
           >
             {isMobileOpen ? <X className="size-5" /> : <Menu className="size-5" />}
           </button>

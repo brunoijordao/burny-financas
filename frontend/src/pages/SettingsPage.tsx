@@ -24,7 +24,7 @@ export function SettingsPage() {
 
       <Link
         to="/settings/auto-categorization"
-        className="flex items-center gap-4 rounded-lg border border-border bg-card p-6 text-card-foreground shadow-sm outline-none transition-colors hover:bg-secondary focus-visible:ring-2 focus-visible:ring-ring"
+        className="flex items-center gap-4 rounded-card border border-border bg-card p-6 text-card-foreground shadow-card outline-none transition-colors hover:bg-secondary focus-visible:ring-1 focus-visible:ring-ring"
       >
         <div className="flex size-10 shrink-0 items-center justify-center rounded-full bg-secondary text-secondary-foreground">
           <Tags className="size-5" />

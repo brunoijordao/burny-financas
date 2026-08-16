@@ -61,7 +61,7 @@ export function TransactionList({
                 className={
                   transaction.type === 'EXPENSE'
                     ? 'font-semibold text-destructive'
-                    : 'font-semibold text-emerald-600 dark:text-emerald-400'
+                    : 'font-semibold text-foreground'
                 }
               >
                 {transaction.type === 'EXPENSE' ? '-' : '+'}

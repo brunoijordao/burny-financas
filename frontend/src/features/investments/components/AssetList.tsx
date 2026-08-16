@@ -71,7 +71,7 @@ export function AssetList({ assets, onAddOperation, onAddValuation, onEdit, onDe
               <p
                 className={cn(
                   'text-sm font-semibold',
-                  asset.profitabilityAmount >= 0 ? 'text-emerald-600 dark:text-emerald-400' : 'text-destructive',
+                  asset.profitabilityAmount >= 0 ? 'text-foreground' : 'text-destructive',
                 )}
               >
                 {asset.profitabilityAmount >= 0 ? '+' : ''}

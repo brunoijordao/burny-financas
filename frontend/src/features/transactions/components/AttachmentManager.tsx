@@ -91,7 +91,7 @@ export function AttachmentManager({ transaction, onClose }: AttachmentManagerPro
           attachments.map((attachment) => (
             <div
               key={attachment.id}
-              className="flex items-center justify-between gap-2 rounded-md border border-input px-3 py-2 text-sm"
+              className="flex items-center justify-between gap-2 rounded-card border border-input px-3 py-2 text-sm"
             >
               <div className="flex flex-col">
                 <span>{attachment.originalFilename}</span>
@@ -112,7 +112,7 @@ export function AttachmentManager({ transaction, onClose }: AttachmentManagerPro
 
       <div
         {...getRootProps()}
-        className={`flex cursor-pointer flex-col items-center justify-center rounded-md border-2 border-dashed p-6 text-sm text-muted-foreground ${
+        className={`flex cursor-pointer flex-col items-center justify-center rounded-card border-2 border-dashed p-6 text-sm text-muted-foreground ${
           isDragActive ? 'border-ring bg-accent' : 'border-input'
         }`}
       >

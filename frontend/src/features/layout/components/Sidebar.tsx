@@ -20,12 +20,11 @@ export function Sidebar({ collapsed, onToggleCollapse, onNavigate, className }: 
 
   return (
     <div
-      className={cn(
-        'flex h-full flex-col border-r border-sidebar-border bg-sidebar-background text-sidebar-foreground',
-        className,
-      )}
+      // Sidebar Surface spec: one tonal step off canvas, no divider line — the
+      // surface color alone reads as a distinct layer.
+      className={cn('flex h-full flex-col bg-sidebar-background text-sidebar-foreground', className)}
     >
-      <div className={cn('flex items-center gap-3 border-b border-sidebar-border px-4 py-4', collapsed && 'justify-center px-2')}>
+      <div className={cn('flex items-center gap-3 px-4 py-4', collapsed && 'justify-center px-2')}>
         <div
           aria-hidden="true"
           className="flex size-9 shrink-0 items-center justify-center rounded-full bg-sidebar-active-bg text-sm font-semibold text-sidebar-foreground"
@@ -46,7 +45,7 @@ export function Sidebar({ collapsed, onToggleCollapse, onNavigate, className }: 
           aria-label="Sair"
           title={collapsed ? 'Sair' : undefined}
           className={cn(
-            'flex h-9 w-full items-center gap-2 rounded-md px-3 text-sm text-sidebar-muted-foreground outline-none transition-colors hover:bg-sidebar-active-bg hover:text-sidebar-foreground focus-visible:ring-2 focus-visible:ring-sidebar-accent-bar',
+            'flex h-9 w-full items-center gap-2 rounded-button px-3 text-sm text-sidebar-muted-foreground outline-none transition-colors hover:bg-sidebar-active-bg hover:text-sidebar-foreground focus-visible:ring-1 focus-visible:ring-sidebar-accent-bar',
             collapsed && 'justify-center px-0',
           )}
         >
@@ -62,14 +61,14 @@ export function Sidebar({ collapsed, onToggleCollapse, onNavigate, className }: 
       </nav>
 
       {onToggleCollapse && (
-        <div className="border-t border-sidebar-border p-2">
+        <div className="p-2">
           <button
             type="button"
             onClick={onToggleCollapse}
             aria-label={collapsed ? 'Expandir menu' : 'Recolher menu'}
             title={collapsed ? 'Expandir menu' : 'Recolher menu'}
             className={cn(
-              'flex h-9 w-full items-center gap-2 rounded-md px-3 text-sm text-sidebar-muted-foreground outline-none transition-colors hover:bg-sidebar-active-bg hover:text-sidebar-foreground focus-visible:ring-2 focus-visible:ring-sidebar-accent-bar',
+              'flex h-9 w-full items-center gap-2 rounded-button px-3 text-sm text-sidebar-muted-foreground outline-none transition-colors hover:bg-sidebar-active-bg hover:text-sidebar-foreground focus-visible:ring-1 focus-visible:ring-sidebar-accent-bar',
               collapsed && 'justify-center px-0',
             )}
           >

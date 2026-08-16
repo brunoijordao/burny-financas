@@ -1,41 +1,56 @@
 @import "tailwindcss";
 
 @theme {
-  --font-sans: system-ui, 'Segoe UI', Roboto, sans-serif;
+  --font-sans: 'Inter', system-ui, 'Segoe UI', Roboto, sans-serif;
 }
 
 :root {
-  --background: #ffffff;
-  --foreground: #08060d;
-  --card: #ffffff;
-  --card-foreground: #08060d;
-  --primary: #7c3aed;
-  --primary-foreground: #ffffff;
-  --secondary: #f4f3ec;
-  --secondary-foreground: #08060d;
-  --muted: #f4f3ec;
-  --muted-foreground: #6b6375;
-  --destructive: #dc2626;
-  --destructive-foreground: #ffffff;
-  --border: #e5e4e7;
-  --input: #e5e4e7;
-  --ring: #7c3aed;
-  --radius: 0.5rem;
+  /*
+   * Palette from frontend/DESIGN.md ("Ui — Style Reference", Theme: light).
+   * Canvas/Paper/Surface Alt/Ink/Ink Soft/Mid Gray/Hairline/Ember are DESIGN.md's
+   * own token names; the --background/--primary/etc. names below are the
+   * semantic Tailwind-facing names components already consume, mapped onto
+   * DESIGN.md's values so no per-component edits are needed for color.
+   */
+  --canvas: #f5f5f5;
+  --paper: #ffffff;
+  --surface-alt: #fafafa;
+  --ink: #0a0a0a;
+  --ink-soft: #171717;
+  --mid-gray: #737373;
+  --hairline: #e5e5e5;
+  --ember: #e7000b;
 
-  --sidebar-background: #1b1027;
-  --sidebar-foreground: #ece7f5;
-  --sidebar-muted-foreground: #9c8fb0;
-  --sidebar-border: #2f2140;
-  --sidebar-active-bg: rgba(124, 58, 237, 0.16);
-  --sidebar-accent-bar: #a78bfa;
+  --background: var(--canvas);
+  --foreground: var(--ink);
+  --card: var(--paper);
+  --card-foreground: var(--ink);
+  --primary: var(--ink);
+  --primary-foreground: var(--surface-alt);
+  --secondary: var(--canvas);
+  --secondary-foreground: var(--ink);
+  --muted: var(--canvas);
+  --muted-foreground: var(--mid-gray);
+  --destructive: var(--ember);
+  --destructive-foreground: var(--paper);
+  --border: var(--hairline);
+  --input: var(--hairline);
+  --ring: var(--hairline);
+
+  --sidebar-background: var(--surface-alt);
+  --sidebar-foreground: var(--ink);
+  --sidebar-muted-foreground: var(--mid-gray);
+  --sidebar-border: var(--surface-alt);
+  --sidebar-active-bg: rgba(10, 10, 10, 0.06);
+  --sidebar-accent-bar: var(--ink);
 
   /*
    * Dashboard chart colors, validated with the dataviz skill's validate_palette.js
-   * (categorical six-check suite) against this file's own light/dark surfaces —
-   * see add-dashboard/tasks.md section 6. Chart 1-6 is the documented reference
-   * categorical palette (references/palette.md) reordered to lead with the app's
-   * violet family; income/expense reuse the green/red slots from that same set
-   * rather than inventing new hues.
+   * (categorical six-check suite) against this file's own light surfaces — see
+   * add-dashboard/tasks.md section 6. DESIGN.md defines no dataviz palette, so
+   * these are intentionally kept unchanged by adapt-frontend-design-system:
+   * multi-series financial charts need distinguishable hues that a monochromatic
+   * UI-chrome palette cannot provide.
    */
   --chart-1: #4a3aa7;
   --chart-2: #e34948;
@@ -45,42 +60,6 @@
   --chart-6: #eda100;
   --chart-income: #008300;
   --chart-expense: #e34948;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #16171d;
-    --foreground: #f3f4f6;
-    --card: #1c1d24;
-    --card-foreground: #f3f4f6;
-    --primary: #c084fc;
-    --primary-foreground: #16171d;
-    --secondary: #1f2028;
-    --secondary-foreground: #f3f4f6;
-    --muted: #1f2028;
-    --muted-foreground: #9ca3af;
-    --destructive: #f87171;
-    --destructive-foreground: #16171d;
-    --border: #2e303a;
-    --input: #2e303a;
-    --ring: #c084fc;
-
-    --sidebar-background: #201530;
-    --sidebar-foreground: #ece7f5;
-    --sidebar-muted-foreground: #a89bbd;
-    --sidebar-border: #33254a;
-    --sidebar-active-bg: rgba(192, 132, 252, 0.16);
-    --sidebar-accent-bar: #c084fc;
-
-    --chart-1: #9085e9;
-    --chart-2: #e66767;
-    --chart-3: #3987e5;
-    --chart-4: #008300;
-    --chart-5: #d55181;
-    --chart-6: #c98500;
-    --chart-income: #008300;
-    --chart-expense: #e66767;
-  }
 }
 
 @theme inline {
@@ -113,9 +92,35 @@
   --color-chart-6: var(--chart-6);
   --color-chart-income: var(--chart-income);
   --color-chart-expense: var(--chart-expense);
-  --radius-sm: calc(var(--radius) - 4px);
-  --radius-md: calc(var(--radius) - 2px);
-  --radius-lg: var(--radius);
+
+  /*
+   * Raw DESIGN.md palette tokens, exposed directly for the rare component
+   * (e.g. Badge — Solid) that needs a specific palette step rather than a
+   * semantic role like --color-primary.
+   */
+  --color-canvas: var(--canvas);
+  --color-paper: var(--paper);
+  --color-surface-alt: var(--surface-alt);
+  --color-ink: var(--ink);
+  --color-ink-soft: var(--ink-soft);
+  --color-mid-gray: var(--mid-gray);
+  --color-hairline: var(--hairline);
+  --color-ember: var(--ember);
+
+  /*
+   * DESIGN.md's Border Radius scale: two unrelated numbers (18px interactive,
+   * 24px containers), not one derived scale — see design.md decision 2. Each
+   * name below generates a matching `rounded-*` Tailwind utility.
+   */
+  --radius-button: 18px;
+  --radius-input: 18px;
+  --radius-badge: 18px;
+  --radius-card: 24px;
+  --radius-nested: 10px;
+  --radius-sm: 6px;
+
+  /* DESIGN.md Elevation → Card: hairline + two soft offset shadows. */
+  --shadow-card: 0 0 0 1px rgba(23, 23, 23, 0.05), 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
 }
 
 * {
@@ -127,7 +132,7 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-sans);
-  color-scheme: light dark;
+  color-scheme: light;
 }
 
 #root {

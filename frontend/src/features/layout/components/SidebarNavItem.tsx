@@ -21,9 +21,9 @@ export function SidebarNavItem({ item, collapsed, onNavigate }: SidebarNavItemPr
       aria-label={item.label}
       className={({ isActive }) =>
         cn(
-          'group relative flex h-10 items-center gap-3 rounded-md px-3 text-sm font-medium outline-none transition-colors',
+          'group relative flex h-10 items-center gap-3 rounded-button px-3 text-sm font-medium outline-none transition-colors',
           'text-sidebar-muted-foreground hover:bg-sidebar-active-bg hover:text-sidebar-foreground',
-          'focus-visible:ring-2 focus-visible:ring-sidebar-accent-bar',
+          'focus-visible:ring-1 focus-visible:ring-sidebar-accent-bar',
           collapsed && 'justify-center px-0',
           isActive && 'bg-sidebar-active-bg text-sidebar-foreground',
         )
